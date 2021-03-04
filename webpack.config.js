@@ -7,6 +7,7 @@ module.exports = {
   devtool: 'inline-source-map',
   devServer: {
     contentBase: './dist/webapp',
+    historyApiFallback: true,
    hot: true,
   },
   module: {
