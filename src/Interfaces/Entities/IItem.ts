@@ -4,7 +4,8 @@ interface IItem {
   brand?: string,
   type?: string,
   cost?: number,
-  descriptiveTags?: string[]
+  descriptiveTags?: string[],
+  imageUri?: string,
   addDescriptiveTag(tag: string): void,
   removeDescriptiveTag(tag: string): void
 }

@@ -1,10 +1,11 @@
 import * as React from 'react'
+import history from '../history'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import { ShoppingCart, Storefront } from '@material-ui/icons'
-import history from '../history'
+import './styles.css'
 
 class Home extends React.Component {
   onStartShoppingSessionClick = () => { history.push('/shoppingSession') }

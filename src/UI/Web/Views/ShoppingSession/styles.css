@@ -1,0 +1,42 @@
+.ShoppingSession {
+  margin-top: 80px;
+}
+
+.ShoppingSession .addItemIcon {
+  background-color: #03DAC5;
+  position: fixed;
+  z-index: 1000;
+  right: 20px;
+  top: 30px
+}
+
+.ShoppingSession .addItemIcon:hover {
+  background-color: #2beeda;
+}
+
+.AddItemToShoppingSession {
+  margin-top: 80px;
+}
+
+.AddItemToShoppingSession img {
+  display: block;
+  max-height: 350px;
+  max-width: 100%;
+  margin: auto;
+}
+
+.AddItemToShoppingSession .itemImageSection {
+  position:  relative;
+}
+
+.AddItemToShoppingSession .addItemImageIcon {
+  background-color: #03DAC5;
+  position: absolute;
+  bottom: -10%;
+  right: 4%
+}
+
+
+.AddItemToShoppingSession .addItemImageIcon:hover {
+  background-color: #2beeda;
+}

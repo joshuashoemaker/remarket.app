@@ -5,7 +5,8 @@ interface ItemConstructor {
   brand?: string,
   type?: string,
   cost?: number,
-  descriptiveTags?: string[]
+  descriptiveTags?: string[],
+  imageUri?: string
 }
 
 export default ItemConstructor

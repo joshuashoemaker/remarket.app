@@ -7,6 +7,7 @@ class Item implements IItem {
   public type: string | undefined
   public cost: number | undefined
   public descriptiveTags: string[]
+  public imageUri: string | undefined
 
   constructor(props: ItemConstructor) {
     this.id = props.id
@@ -14,6 +15,7 @@ class Item implements IItem {
     this.type = props.type
     this.cost = props.cost
     this.descriptiveTags = props.descriptiveTags || []
+    this.imageUri = props.imageUri
   }
 
   addDescriptiveTag = (tag: string): void => {

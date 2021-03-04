@@ -1,8 +1,10 @@
+import ItemConstructor from '../Contructors/ItemConstructor'
 import IItem from '../Entities/IItem'
 
 interface IItemRepository {
   items: IItem[],
   addItem(item: IItem): void,
+  editById(id: string, modifications: ItemConstructor): IItem,
   findById(id: string): IItem | undefined,
   findByBrand(brand: string): IItem[],
   findByLabel(label: string): IItem[],
