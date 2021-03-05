@@ -40,3 +40,24 @@
 .AddItemToShoppingSession .addItemImageIcon:hover {
   background-color: #2beeda;
 }
+
+.AddItemToShoppingSession .itemFieldsSection {
+  width: 95%;
+  margin: 30px auto 0px;
+}
+
+
+.AddItemToShoppingSession .itemFieldsSection .formInput {
+  margin-bottom: 20px;
+}
+
+.AddItemToShoppingSession .footer {
+  position: fixed;
+  z-index: 1000;
+  bottom: 0;
+  top: auto;
+}
+
+.AddItemToShoppingSession .footerButton {
+  width: 33.33%
+}

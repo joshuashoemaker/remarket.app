@@ -45,9 +45,15 @@ export default function ShoppingSessionItem (props: { item: IItem }) {
           title="Contemplative Reptile"
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            { item.brand }
+          <Typography gutterBottom variant="h5" component="span">
+            { item.label }
           </Typography>
+
+          {item.brand
+            ? <Typography gutterBottom variant="subtitle1" component="span"> - { item.brand } </Typography>
+            : ''
+          }
+
           <Typography variant="body2" color="textSecondary" component="p">
             { `$${item.cost}` }
           </Typography>

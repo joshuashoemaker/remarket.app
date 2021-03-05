@@ -1,14 +1,24 @@
 import * as React from 'react'
-import { Box, IconButton } from '@material-ui/core'
-import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
-import './styles.css'
+import history from '../history'
+import { v4 as uuidv4 } from 'uuid'
+import makeItem from '../../../../Factories/makeItem'
 import AddItemToShoppingSessionController from '../../Controllers/AddItemToShoppingSessionController'
 import makeInMemoryItemRepository from '../../../../Factories/makeInMemoryItemRepository'
-import makeItem from '../../../../Factories/makeItem'
+
+import { AppBar, Box, Button, IconButton, MenuItem, Select, TextField, Toolbar } from '@material-ui/core'
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
+import AddIcon from '@material-ui/icons/Add'
+import CancelIcon from '@material-ui/icons/Cancel'
+import InfoIcon from '@material-ui/icons/Info';
+import './styles.css'
 
 interface AddItemProps { }
 
 interface AddItemState {
+  cost: number | '',
+  type: string,
+  brand: string,
+  label: string,
   itemImageSrc: string
 }
 
@@ -21,7 +31,13 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
 
     this.controller = new AddItemToShoppingSessionController({ makeItemRepository: makeInMemoryItemRepository, makeItem: makeItem })
 
-    this.state = { itemImageSrc: 'https://designshack.net/wp-content/uploads/placeholder-image.png' }
+    this.state = {
+      itemImageSrc: 'https://designshack.net/wp-content/uploads/placeholder-image.png',
+      cost: '',
+      type: 'NA',
+      brand: '',
+      label: ''
+    }
     this.fileInput = React.createRef()
   }
   
@@ -33,10 +49,38 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
     reader.onload = (e) => {
       const src = e!.target!.result as string
       this.setState({ itemImageSrc: src })
-      this.controller.addItem({ id:'IUYTRE', imageUri: src })
     }
 
     reader.readAsDataURL(file)
+  }
+
+  onBrandChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ brand: e.target.value })
+  }
+
+  onCostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ cost: e.target.valueAsNumber || '' })
+  }
+
+  onLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ label: e.target.value })
+  }
+
+  onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ type: e.target.value })
+  }
+
+  onSubmit = () => {
+    this.controller.addItem({
+      id: uuidv4(),
+      imageUri: this.state.itemImageSrc,
+      cost: this.state.cost || undefined,
+      type: this.state.type,
+      brand: this.state.brand,
+      label: this.state.label
+    })
+
+    history.goBack()
   }
 
   render() {
@@ -48,6 +92,31 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
           <input ref={this.fileInput} onChange={this.onAddImage} id='uploadImage' type='file' hidden accept='image/*' />
         </IconButton>
       </Box>
+
+      <form className='itemFieldsSection' noValidate autoComplete='off'>
+        <TextField value={this.state.cost} onChange={this.onCostChange} id='costField' className='formInput' label='Cost' type='number' variant='outlined' autoFocus fullWidth />
+        
+        <TextField value={this.state.type} onChange={this.onTypeChange} id='typeField' className='formInput' label='Type' variant='outlined' select fullWidth defaultValue='NA'>
+          <MenuItem value='NA'><em>None</em></MenuItem>
+          <MenuItem value='clothing'>Clothing</MenuItem>
+        </TextField>
+
+        <TextField value={this.state.brand} onChange={this.onBrandChange} id='brandField' className='formInput' label='Brand' variant='outlined' fullWidth />
+        
+        <TextField value={this.state.label} onChange={this.onLabelChange} id='labelField' className='formInput' label='Label' variant='outlined' fullWidth />
+      </form>
+
+      <AppBar position='fixed' className='footer'>
+        <Toolbar>
+          <Button className='footerButton'><CancelIcon htmlColor='white' fontSize='large' /></Button>
+
+          <Button onClick={this.onSubmit} className='footerButton'>
+            <AddIcon htmlColor='white' fontSize='large' />
+          </Button>
+
+          <Button className='footerButton'><InfoIcon htmlColor='white' fontSize='large' /></Button>
+        </Toolbar>
+      </AppBar>
     </div>
   }
 }

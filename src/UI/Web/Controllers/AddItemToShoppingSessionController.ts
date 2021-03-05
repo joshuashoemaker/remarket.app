@@ -14,7 +14,6 @@ class AddItemToShoppingSessionController {
 
   addItem = (itemProps: ItemConstructor) => {
     this.itemRepository.addItem(this.makeItem(itemProps))
-    console.log(this.itemRepository.items)
   }
 
   editItem = (item: IItem) => {

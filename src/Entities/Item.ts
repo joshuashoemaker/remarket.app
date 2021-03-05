@@ -6,6 +6,7 @@ class Item implements IItem {
   public brand: string | undefined
   public type: string | undefined
   public cost: number | undefined
+  public label: string | undefined
   public descriptiveTags: string[]
   public imageUri: string | undefined
 
@@ -14,6 +15,7 @@ class Item implements IItem {
     this.brand = props.brand
     this.type = props.type
     this.cost = props.cost
+    this.label = props.label
     this.descriptiveTags = props.descriptiveTags || []
     this.imageUri = props.imageUri
   }

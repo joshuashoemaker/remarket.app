@@ -3,7 +3,12 @@ import ItemConstructor from '../../Interfaces/Contructors/ItemConstructor'
 import IItemRepository from '../../Interfaces/Repositories/IItemRepository'
 
 class ItemRepository implements IItemRepository {
-  public items: IItem[] = []
+  public items: IItem[]
+
+  constructor (items?: IItem[]) {
+    if (items) this.items = items
+    else this.items = []
+  }
 
   addItem = (item: IItem) => this.items.push(item)
 
