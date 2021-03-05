@@ -2,17 +2,17 @@ import * as React from 'react'
 import history from '../history'
 import { v4 as uuidv4 } from 'uuid'
 import makeItem from '../../../../Factories/Item/makeItem'
+import makeItemClothing from '../../../../Factories/Item/makeItemClothing'
 import AddItemToShoppingSessionController from '../../Controllers/AddItemToShoppingSessionController'
 import makeInMemoryItemRepository from '../../../../Factories/makeInMemoryItemRepository'
 import AddItemDetailOptions from './AddItemDetail/AddItemDetailOptions'
 
-import { AppBar, Box, Button, IconButton, MenuItem, TextField, Toolbar } from '@material-ui/core'
+import { AppBar, Box, Button, Chip, IconButton, MenuItem, TextField, Toolbar } from '@material-ui/core'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import AddIcon from '@material-ui/icons/Add'
 import CancelIcon from '@material-ui/icons/Cancel'
 import InfoIcon from '@material-ui/icons/Info';
 import './styles.css'
-import makeItemClothing from '../../../../Factories/Item/makeItemClothing'
 
 interface AddItemProps { }
 
@@ -21,6 +21,8 @@ interface AddItemState {
   type: string,
   brand: string,
   label: string,
+  tagFieldValue: string,
+  descriptiveTags: string[],
   itemImageSrc: string
 }
 
@@ -41,7 +43,9 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
       cost: '',
       type: 'NA',
       brand: '',
-      label: ''
+      label: '',
+      tagFieldValue: '',
+      descriptiveTags: []
     }
     this.fileInput = React.createRef()
   }
@@ -71,6 +75,20 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
     this.setState({ label: e.target.value })
   }
 
+  onTagFieldEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter') return
+    const tag = this.state.tagFieldValue
+    this.setState({ tagFieldValue: '' })
+    
+    if (this.state.descriptiveTags.includes(tag)) return
+    else this.setState({ descriptiveTags: [...this.state.descriptiveTags, tag] })
+  }
+
+  onTagFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const tagFieldValue = e.target.value
+    this.setState({ tagFieldValue })
+  }
+
   onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const type = e.target.value
     if (type === 'clothing') this.controller.makeItemFactory = makeItemClothing
@@ -84,7 +102,8 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
       cost: this.state.cost || undefined,
       type: this.state.type,
       brand: this.state.brand,
-      label: this.state.label
+      label: this.state.label,
+      descriptiveTags: this.state.descriptiveTags
     }
     const itemDetails = this.itemDetailOptions.getDetailsByDetailType(this.state.type)
     if (itemDetails) itemProps = Object.assign(itemProps, itemDetails)
@@ -94,9 +113,21 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
     history.goBack()
   }
 
+  removeTag = (tag: string) => {
+    let descriptiveTags = [...this.state.descriptiveTags]
+    const tagIndex = descriptiveTags.findIndex(t => t === tag)
+    descriptiveTags.splice(tagIndex, 1)
+    this.setState({ descriptiveTags: descriptiveTags })
+  }
+
   renderAddItemDetail = () => {
     const { type } = this.state
     return this.itemDetailOptions.getElementByName(type)
+  }
+
+  renderDescriptiveTags = () => {
+    const { descriptiveTags } = this.state
+    return descriptiveTags.map(t => <Chip label={t} key={t} onDelete={ () => this.removeTag(t) } />)
   }
 
   render() {
@@ -122,6 +153,10 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
         <TextField value={this.state.label} onChange={this.onLabelChange} id='labelField' className='formInput' label='Reference Label' variant='outlined' fullWidth />
       
         { this.renderAddItemDetail() }
+
+        <TextField value={this.state.tagFieldValue} onChange={this.onTagFieldChange} onKeyPress={this.onTagFieldEnter} id='descriptiveTagField' className='formInput' label='Add Tag' variant='outlined' fullWidth  />
+
+        { this.renderDescriptiveTags() }
       </form>
 
       <AppBar position='fixed' className='footer'>

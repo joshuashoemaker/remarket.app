@@ -43,7 +43,7 @@
 
 .AddItemToShoppingSession .itemFieldsSection {
   width: 95%;
-  margin: 30px auto 0px;
+  margin: 30px auto 80px;
 }
 
 
@@ -60,8 +60,4 @@
 
 .AddItemToShoppingSession .footerButton {
   width: 33.33%
-}
-
-.AddItemToShoppingSession .itemDetails {
-  margin-bottom: 60px;
 }
