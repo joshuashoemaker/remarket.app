@@ -28,6 +28,7 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
   private fileInput: React.RefObject<HTMLInputElement>
   private controller: AddItemToShoppingSessionController
   private itemDetailOptions: AddItemDetailOptions
+  private itemId: string = uuidv4()
 
   constructor (props: AddItemProps) {
     super(props)
@@ -78,7 +79,7 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
 
   onSubmit = () => {
     let itemProps = {
-      id: uuidv4(),
+      id: this.itemId,
       imageUri: this.state.itemImageSrc,
       cost: this.state.cost || undefined,
       type: this.state.type,
@@ -90,7 +91,7 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
     console.log(itemProps)
     this.controller.addItem(itemProps)
 
-    // history.goBack()
+    history.goBack()
   }
 
   renderAddItemDetail = () => {
