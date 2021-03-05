@@ -4,8 +4,9 @@ import { v4 as uuidv4 } from 'uuid'
 import makeItem from '../../../../Factories/makeItem'
 import AddItemToShoppingSessionController from '../../Controllers/AddItemToShoppingSessionController'
 import makeInMemoryItemRepository from '../../../../Factories/makeInMemoryItemRepository'
+import AddItemDetailOptions from './AddItemDetail/AddItemDetailOptions'
 
-import { AppBar, Box, Button, IconButton, MenuItem, Select, TextField, Toolbar } from '@material-ui/core'
+import { AppBar, Box, Button, IconButton, MenuItem, TextField, Toolbar } from '@material-ui/core'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import AddIcon from '@material-ui/icons/Add'
 import CancelIcon from '@material-ui/icons/Cancel'
@@ -25,11 +26,13 @@ interface AddItemState {
 class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemState> {
   private fileInput: React.RefObject<HTMLInputElement>
   private controller: AddItemToShoppingSessionController
+  private itemDetailOptions: AddItemDetailOptions
 
   constructor (props: AddItemProps) {
     super(props)
 
     this.controller = new AddItemToShoppingSessionController({ makeItemRepository: makeInMemoryItemRepository, makeItem: makeItem })
+    this.itemDetailOptions = new AddItemDetailOptions({/* empty props */})
 
     this.state = {
       itemImageSrc: 'https://designshack.net/wp-content/uploads/placeholder-image.png',
@@ -67,20 +70,30 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
   }
 
   onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ type: e.target.value })
+    const type = e.target.value
+    this.setState({ type })
   }
 
   onSubmit = () => {
-    this.controller.addItem({
+    let itemProps = {
       id: uuidv4(),
       imageUri: this.state.itemImageSrc,
       cost: this.state.cost || undefined,
       type: this.state.type,
       brand: this.state.brand,
       label: this.state.label
-    })
+    }
+    const itemDetails = this.itemDetailOptions.getDetailsByDetailType(this.state.type)
+    if (itemDetails) itemProps = Object.assign(itemProps, itemDetails)
+    console.log(itemProps)
+    this.controller.addItem(itemProps)
 
-    history.goBack()
+    // history.goBack()
+  }
+
+  renderAddItemDetail = () => {
+    const { type } = this.state
+    return this.itemDetailOptions.getElementByName(type)
   }
 
   render() {
@@ -103,7 +116,9 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
 
         <TextField value={this.state.brand} onChange={this.onBrandChange} id='brandField' className='formInput' label='Brand' variant='outlined' fullWidth />
         
-        <TextField value={this.state.label} onChange={this.onLabelChange} id='labelField' className='formInput' label='Label' variant='outlined' fullWidth />
+        <TextField value={this.state.label} onChange={this.onLabelChange} id='labelField' className='formInput' label='Reference Label' variant='outlined' fullWidth />
+      
+        { this.renderAddItemDetail() }
       </form>
 
       <AppBar position='fixed' className='footer'>
