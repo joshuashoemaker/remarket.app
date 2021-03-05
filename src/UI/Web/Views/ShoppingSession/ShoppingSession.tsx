@@ -15,6 +15,7 @@ class ShoppingSession extends React.Component {
   constructor (props: any) {
     super(props)
     this.itemRepository = new InMemoryItemRepository()
+    console.log(this.itemRepository.items)
   }
 
   onAddItemClick = () => {

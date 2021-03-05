@@ -1,7 +1,7 @@
 import * as React from 'react'
 import history from '../history'
 import { v4 as uuidv4 } from 'uuid'
-import makeItem from '../../../../Factories/makeItem'
+import makeItem from '../../../../Factories/Item/makeItem'
 import AddItemToShoppingSessionController from '../../Controllers/AddItemToShoppingSessionController'
 import makeInMemoryItemRepository from '../../../../Factories/makeInMemoryItemRepository'
 import AddItemDetailOptions from './AddItemDetail/AddItemDetailOptions'
@@ -12,6 +12,7 @@ import AddIcon from '@material-ui/icons/Add'
 import CancelIcon from '@material-ui/icons/Cancel'
 import InfoIcon from '@material-ui/icons/Info';
 import './styles.css'
+import makeItemClothing from '../../../../Factories/Item/makeItemClothing'
 
 interface AddItemProps { }
 
@@ -71,6 +72,7 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
 
   onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const type = e.target.value
+    if (type === 'clothing') this.controller.makeItemFactory = makeItemClothing
     this.setState({ type })
   }
 
