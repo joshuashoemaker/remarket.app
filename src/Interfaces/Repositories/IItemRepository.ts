@@ -1,5 +1,5 @@
 import ItemConstructor from '../Contructors/ItemConstructor'
-import IItem from '../Entities/IItem'
+import IItem from '../Entities/Item/IItem'
 
 interface IItemRepository {
   items: IItem[],

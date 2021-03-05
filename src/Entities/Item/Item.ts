@@ -1,5 +1,5 @@
-import IItem from '../Interfaces/Entities/IItem'
-import ItemConstructor from '../Interfaces/Contructors/ItemConstructor'
+import IItem from '../../Interfaces/Entities/Item/IItem'
+import ItemConstructor from '../../Interfaces/Contructors/ItemConstructor'
 
 class Item implements IItem {
   readonly id: string

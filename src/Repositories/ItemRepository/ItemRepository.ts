@@ -1,4 +1,4 @@
-import IItem from '../../Interfaces/Entities/IItem'
+import IItem from '../../Interfaces/Entities/Item/IItem'
 import ItemConstructor from '../../Interfaces/Contructors/ItemConstructor'
 import IItemRepository from '../../Interfaces/Repositories/IItemRepository'
 

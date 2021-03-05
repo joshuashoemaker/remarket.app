@@ -1,5 +1,5 @@
 import ItemConstructor from '../../../Interfaces/Contructors/ItemConstructor'
-import IItem from '../../../Interfaces/Entities/IItem'
+import IItem from '../../../Interfaces/Entities/Item/IItem'
 import IItemRepository from '../../../Interfaces/Repositories/IItemRepository'
 
 class AddItemToShoppingSessionController {
