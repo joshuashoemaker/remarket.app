@@ -14,7 +14,6 @@ import { AppBar, Box, Button, Chip, IconButton, MenuItem, TextField, Toolbar } f
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import AddIcon from '@material-ui/icons/Add'
 import CancelIcon from '@material-ui/icons/Cancel'
-import InfoIcon from '@material-ui/icons/Info';
 import './styles.css'
 
 interface AddItemProps { }
@@ -81,9 +80,10 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
       const src = e!.target!.result as string
       this.setState({ itemImageSrc: src })
     }
-
     reader.readAsDataURL(file)
   }
+
+  onCancel = () => { history.goBack() }
 
   onBrandChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ brand: e.target.value })
@@ -186,13 +186,11 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
 
       <AppBar position='fixed' className='footer'>
         <Toolbar>
-          <Button className='footerButton'><CancelIcon htmlColor='white' fontSize='large' /></Button>
+          <Button onClick={this.onCancel} className='footerButton'><CancelIcon htmlColor='white' fontSize='large' /></Button>
 
           <Button onClick={this.onSubmit} className='footerButton'>
             <AddIcon htmlColor='white' fontSize='large' />
           </Button>
-
-          <Button className='footerButton'><InfoIcon htmlColor='white' fontSize='large' /></Button>
         </Toolbar>
       </AppBar>
     </div>
