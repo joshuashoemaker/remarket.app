@@ -1,7 +1,10 @@
 import * as React from 'react'
 import { TextField } from '@material-ui/core'
+import ItemClothingConstructor from '../../../../../Interfaces/Contructors/ItemClothingConstructor'
 
-interface AddItemProps { }
+interface AddItemProps {
+  item?: ItemClothingConstructor
+}
 
 interface AddItemState {
   material: string,
@@ -13,9 +16,22 @@ class AddClothingItemDetailToShoppingSession extends React.Component<AddItemProp
   constructor (props: AddItemProps) {
     super(props)
 
+    let timeOfProduction = ''
+    if (props.item?.timeOfProduction) {
+      const date: Date = props.item?.timeOfProduction
+
+      let dateOfMonth = `${date.getDate()}`
+      if (dateOfMonth.length === 1) dateOfMonth = `0${dateOfMonth}`
+
+      let month = `${date.getMonth() + 1}`
+      if (month.length === 1) month = `0${month}`
+
+      timeOfProduction = `${date.getFullYear()}-${month}-${dateOfMonth}`
+    }
+
     this.state = {
-      material: '',
-      timeOfProduction: ''
+      material: props.item?.material || '',
+      timeOfProduction: timeOfProduction
     }
   }
 
@@ -25,6 +41,7 @@ class AddClothingItemDetailToShoppingSession extends React.Component<AddItemProp
 
   onTimeOfProductionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ timeOfProduction: e.target.value })
+    console.log(e.target.value)
   }
 
   get details () {

@@ -1,10 +1,14 @@
 import * as React from 'react'
 import history from '../history'
+import { v4 as uuidv4 } from 'uuid'
 import makeItem from '../../../../Factories/Item/makeItem'
 import makeItemClothing from '../../../../Factories/Item/makeItemClothing'
 import AddItemToShoppingSessionController from '../../Controllers/AddItemToShoppingSessionController'
 import makeInMemoryItemRepository from '../../../../Factories/makeInMemoryItemRepository'
 import AddItemDetailOptions from './AddItemDetail/AddItemDetailOptions'
+import IItem from '../../../../Interfaces/Entities/Item/IItem'
+import InMemoryItemRepository from '../../../../Repositories/ItemRepository/InMemoryItemRepository'
+import IItemRepository from '../../../../Interfaces/Repositories/IItemRepository'
 
 import { AppBar, Box, Button, Chip, IconButton, MenuItem, TextField, Toolbar } from '@material-ui/core'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
@@ -12,9 +16,6 @@ import AddIcon from '@material-ui/icons/Add'
 import CancelIcon from '@material-ui/icons/Cancel'
 import InfoIcon from '@material-ui/icons/Info';
 import './styles.css'
-import IItem from '../../../../Interfaces/Entities/Item/IItem'
-import InMemoryItemRepository from '../../../../Repositories/ItemRepository/InMemoryItemRepository'
-import IItemRepository from '../../../../Interfaces/Repositories/IItemRepository'
 
 interface AddItemProps { }
 
@@ -33,6 +34,7 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
   private controller: AddItemToShoppingSessionController
   private itemDetailOptions: AddItemDetailOptions
   private itemRepository: IItemRepository
+  private itemId: string
   private item: IItem | undefined
 
   constructor (props: AddItemProps) {
@@ -43,7 +45,8 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
     this.itemRepository = new InMemoryItemRepository()
     this.item = this.itemRepository.findById(this.getItemIdFromUrl())
 
-    if (!this.item) history.goBack()
+    if (this.item) this.itemId = this.item.id
+    else this.itemId = uuidv4()
 
     this.state = {
       itemImageSrc: this.item?.imageUri || 'https://designshack.net/wp-content/uploads/placeholder-image.png',
@@ -61,6 +64,12 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
     const path = window.location.pathname
     const pathArray = path.split('/')
     return  pathArray[3]
+  }
+
+  getSubmitActionFromUrl = (): string => {
+    const path = window.location.pathname
+    const pathArray = path.split('/')
+    return  pathArray[2]
   }
   
   onAddImage = () => {
@@ -110,7 +119,7 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
 
   onSubmit = () => {
     let itemProps = {
-      id: this.item!.id,
+      id: this.itemId,
       imageUri: this.state.itemImageSrc,
       cost: this.state.cost || undefined,
       type: this.state.type === 'NA' ? undefined : this.state.type,
@@ -120,8 +129,11 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
     }
     const itemDetails = this.itemDetailOptions.getDetailsByDetailType(this.state.type)
     if (itemDetails) itemProps = Object.assign(itemProps, itemDetails)
-    console.log(itemProps)
-    this.controller.editItem(itemProps)
+    
+    const controllerAction = this.getSubmitActionFromUrl()
+    
+    if (controllerAction === 'edit') this.controller.editItem(itemProps)
+    if (controllerAction === 'add') this.controller.addItem(itemProps)
 
     history.goBack()
   }
@@ -135,7 +147,7 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
 
   renderAddItemDetail = () => {
     const { type } = this.state
-    return this.itemDetailOptions.getElementByName(type)
+    return this.itemDetailOptions.getElementByName(type, this.item)
   }
 
   renderDescriptiveTags = () => {
@@ -156,14 +168,14 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
       <form className='itemFieldsSection' noValidate autoComplete='off'>
         <TextField value={this.state.cost} onChange={this.onCostChange} id='costField' className='formInput' label='Cost' type='number' variant='outlined' autoFocus fullWidth />
         
+        <TextField value={this.state.label} onChange={this.onLabelChange} id='labelField' className='formInput' label='Reference Label' variant='outlined' fullWidth />
+        
+        <TextField value={this.state.brand} onChange={this.onBrandChange} id='brandField' className='formInput' label='Brand' variant='outlined' fullWidth />
+        
         <TextField value={this.state.type} onChange={this.onTypeChange} id='typeField' className='formInput' label='Type' variant='outlined' select fullWidth defaultValue='NA'>
           <MenuItem value='NA'><em>None</em></MenuItem>
           <MenuItem value='clothing'>Clothing</MenuItem>
         </TextField>
-
-        <TextField value={this.state.brand} onChange={this.onBrandChange} id='brandField' className='formInput' label='Brand' variant='outlined' fullWidth />
-        
-        <TextField value={this.state.label} onChange={this.onLabelChange} id='labelField' className='formInput' label='Reference Label' variant='outlined' fullWidth />
       
         { this.renderAddItemDetail() }
 
