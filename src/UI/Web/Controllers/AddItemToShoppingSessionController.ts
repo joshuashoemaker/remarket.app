@@ -15,7 +15,7 @@ class AddItemToShoppingSessionController {
     this.itemRepository.addItem(this._makeItem(itemProps))
   }
 
-  editItem = (item: IItem) => {
+  editItem = (item: ItemConstructor) => {
     const modifiedItem = this.itemRepository.editById(item.id, item)
     return modifiedItem
   }

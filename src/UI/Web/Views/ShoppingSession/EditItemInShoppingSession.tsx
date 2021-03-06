@@ -1,6 +1,5 @@
 import * as React from 'react'
 import history from '../history'
-import { v4 as uuidv4 } from 'uuid'
 import makeItem from '../../../../Factories/Item/makeItem'
 import makeItemClothing from '../../../../Factories/Item/makeItemClothing'
 import AddItemToShoppingSessionController from '../../Controllers/AddItemToShoppingSessionController'
@@ -13,6 +12,9 @@ import AddIcon from '@material-ui/icons/Add'
 import CancelIcon from '@material-ui/icons/Cancel'
 import InfoIcon from '@material-ui/icons/Info';
 import './styles.css'
+import IItem from '../../../../Interfaces/Entities/Item/IItem'
+import InMemoryItemRepository from '../../../../Repositories/ItemRepository/InMemoryItemRepository'
+import IItemRepository from '../../../../Interfaces/Repositories/IItemRepository'
 
 interface AddItemProps { }
 
@@ -26,28 +28,39 @@ interface AddItemState {
   itemImageSrc: string
 }
 
-class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemState> {
+class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemState> {
   private fileInput: React.RefObject<HTMLInputElement>
   private controller: AddItemToShoppingSessionController
   private itemDetailOptions: AddItemDetailOptions
-  private itemId: string = uuidv4()
+  private itemRepository: IItemRepository
+  private item: IItem | undefined
 
   constructor (props: AddItemProps) {
     super(props)
 
     this.controller = new AddItemToShoppingSessionController({ makeItemRepository: makeInMemoryItemRepository, makeItem: makeItem })
     this.itemDetailOptions = new AddItemDetailOptions({/* empty props */})
+    this.itemRepository = new InMemoryItemRepository()
+    this.item = this.itemRepository.findById(this.getItemIdFromUrl())
+
+    if (!this.item) history.goBack()
 
     this.state = {
-      itemImageSrc: 'https://designshack.net/wp-content/uploads/placeholder-image.png',
-      cost: '',
-      type: 'NA',
-      brand: '',
-      label: '',
+      itemImageSrc: this.item?.imageUri || 'https://designshack.net/wp-content/uploads/placeholder-image.png',
+      cost: this.item?.cost || '',
+      type: this.item?.type || 'NA',
+      brand: this.item?.brand || '',
+      label: this.item?.label || '',
       tagFieldValue: '',
-      descriptiveTags: []
+      descriptiveTags: this.item?.descriptiveTags || []
     }
     this.fileInput = React.createRef()
+  }
+
+  getItemIdFromUrl = (): string => {
+    const path = window.location.pathname
+    const pathArray = path.split('/')
+    return  pathArray[3]
   }
   
   onAddImage = () => {
@@ -97,7 +110,7 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
 
   onSubmit = () => {
     let itemProps = {
-      id: this.itemId,
+      id: this.item!.id,
       imageUri: this.state.itemImageSrc,
       cost: this.state.cost || undefined,
       type: this.state.type === 'NA' ? undefined : this.state.type,
@@ -108,7 +121,7 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
     const itemDetails = this.itemDetailOptions.getDetailsByDetailType(this.state.type)
     if (itemDetails) itemProps = Object.assign(itemProps, itemDetails)
     console.log(itemProps)
-    this.controller.addItem(itemProps)
+    this.controller.editItem(itemProps)
 
     history.goBack()
   }
@@ -174,4 +187,4 @@ class AddItemToShoppingSession extends React.Component<AddItemProps, AddItemStat
   }
 }
 
-export default AddItemToShoppingSession
+export default EditItemInShoppingSession
