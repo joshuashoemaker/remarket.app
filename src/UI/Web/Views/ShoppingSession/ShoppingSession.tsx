@@ -23,7 +23,11 @@ class ShoppingSession extends React.Component {
   }
 
   renderItems = () => {
-    if (this.itemRepository.items.length <= 0) return <ShoppingSessionPlaceholder />
+    if (this.itemRepository.items.length <= 0) return <Zoom in>
+        <div style={{transitionDelay:  '1000ms'}}>
+          <ShoppingSessionPlaceholder />
+        </div>
+      </Zoom>
 
     return this.itemRepository.items.map((item, index) => {
       return <Zoom in key={item.id}>
@@ -32,10 +36,6 @@ class ShoppingSession extends React.Component {
         </div>
       </Zoom>
     })
-  }
-
-  renderPlaceHolder = () => {
-
   }
 
   render() {
