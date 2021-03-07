@@ -1,5 +1,6 @@
 interface IItem {
   id: string,
+  shoppingSessionId?: string,
   label?: string,
   brand?: string,
   type?: string,

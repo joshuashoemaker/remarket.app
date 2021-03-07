@@ -1,5 +1,5 @@
 import ItemRepository from "./ItemRepository"
-import IItem from "../../Interfaces/Entities/Item/IItem"
+import IItem from "../../Interfaces/Entities/IItem"
 
 let instance: InMemoryItemRepository | null = null
 

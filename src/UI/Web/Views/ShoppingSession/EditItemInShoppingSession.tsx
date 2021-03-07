@@ -6,7 +6,7 @@ import makeItemClothing from '../../../../Factories/Item/makeItemClothing'
 import AddItemToShoppingSessionController from '../../Controllers/AddItemToShoppingSessionController'
 import makeInMemoryItemRepository from '../../../../Factories/makeInMemoryItemRepository'
 import AddItemDetailOptions from './AddItemDetail/AddItemDetailOptions'
-import IItem from '../../../../Interfaces/Entities/Item/IItem'
+import IItem from '../../../../Interfaces/Entities/IItem'
 import InMemoryItemRepository from '../../../../Repositories/ItemRepository/InMemoryItemRepository'
 import IItemRepository from '../../../../Interfaces/Repositories/IItemRepository'
 
@@ -160,7 +160,7 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
       <Box m={1} className='itemImageSection'>
         <img alt='item preview' src={this.state.itemImageSrc} />
         <IconButton component='label' className='addItemImageIcon'>
-          <PhotoCameraIcon />
+          <PhotoCameraIcon htmlColor='white' />
           <input ref={this.fileInput} onChange={this.onAddImage} id='uploadImage' type='file' hidden accept='image/*' />
         </IconButton>
       </Box>
@@ -186,10 +186,12 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
 
       <AppBar position='fixed' className='footer'>
         <Toolbar>
-          <Button onClick={this.onCancel} className='footerButton'><CancelIcon htmlColor='white' fontSize='large' /></Button>
+          <Button onClick={this.onCancel} className='footerButton'>
+            <CancelIcon htmlColor='#ff6868' fontSize='large' />
+          </Button>
 
           <Button onClick={this.onSubmit} className='footerButton'>
-            <AddIcon htmlColor='white' fontSize='large' />
+            <AddIcon htmlColor='#03DAC5' fontSize='large' />
           </Button>
         </Toolbar>
       </AppBar>

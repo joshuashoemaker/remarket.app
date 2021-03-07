@@ -1,4 +1,4 @@
-import IItem from "../Entities/Item/IItem";
+import IItem from "../Entities/IItem";
 
 interface ItemClothingConstructor extends IItem {
   material?: string,

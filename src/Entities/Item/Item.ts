@@ -1,8 +1,9 @@
-import IItem from '../../Interfaces/Entities/Item/IItem'
+import IItem from '../../Interfaces/Entities/IItem'
 import ItemConstructor from '../../Interfaces/Contructors/ItemConstructor'
 
 class Item implements IItem {
   readonly id: string
+  readonly shoppingSessionId: string | undefined
   public brand: string | undefined
   public type: string | undefined
   public cost: number | undefined
