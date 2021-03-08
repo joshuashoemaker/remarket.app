@@ -14,7 +14,7 @@ interface FinalizeShoppingSessionState {
   isFinalizing: boolean
 }
 
-class FinalizeShoppingSessionItems extends React.Component<FinalizeShoppingSessionProps, FinalizeShoppingSessionState> {
+class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionProps, FinalizeShoppingSessionState> {
   private itemRepository: IItemRepository
 
   constructor (props = {}) {
@@ -79,7 +79,7 @@ class FinalizeShoppingSessionItems extends React.Component<FinalizeShoppingSessi
   }
 
   render() {
-    return <div className='FinalizeShoppingSessionItems'>
+    return <div className='FinalizeShoppingSession'>
 
       <List>
         { this.renderItemLineItems() }
@@ -105,4 +105,4 @@ class FinalizeShoppingSessionItems extends React.Component<FinalizeShoppingSessi
   }
 }
 
-export default FinalizeShoppingSessionItems
+export default FinalizeShoppingSession
