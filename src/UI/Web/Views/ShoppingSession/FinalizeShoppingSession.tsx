@@ -37,11 +37,11 @@ class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionPro
     this.setState({ isFinalizing: true })
 
     const response: Response = await this.controller.submit(this.state.checkedItems)
-    if (response.status === 201) {
-      this.setState({ showSuccessMessage: true })
-    }
+    if (response.status === 201) this.setState({ showSuccessMessage: true })
+    else this.setState({showErrorMessage: true})
+
+    await new Promise(resolve => setTimeout(resolve, 1500))
     this.setState({ isFinalizing: false })
-    await new Promise(resolve => setTimeout(resolve, 1000))
     history.push('/')
   }
 

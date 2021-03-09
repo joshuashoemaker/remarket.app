@@ -35,7 +35,6 @@ router.post('/', async (request, response) => {
   try {
     shoppingSessionDbSaveResponse = await db.insertOne(shoppingSession, 'ShoppingSession')
   } catch (err) {
-    console.log(err)
     responseToClient.message = errorCodes.Err10
     response.status(500)
     response.send(responseToClient)
@@ -46,7 +45,6 @@ router.post('/', async (request, response) => {
   try {
     itemsDbSaveResponse = await db.insertMany(itemsInShoppingSession, 'Items')
   } catch (err) {
-    console.log(err)
     responseToClient.message = errorCodes.Err20
     response.status(500)
     response.send(responseToClient)

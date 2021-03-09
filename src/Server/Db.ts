@@ -13,18 +13,24 @@ class Db {
   }
 
   insertOne = async (data: Record, collectionName: string): Promise<any> => {
-    const db = this.client.db(SYS.databaseName)
-    const collection = db.collection(collectionName)
-    const saveResponse = await collection.insertOne(data.record)
-    return saveResponse.ops[0]
+    try {
+      const collection = this.db.collection(collectionName)
+      const saveResponse = await collection.insertOne(data.record)
+      return saveResponse.ops[0]
+    } catch (err) {
+      throw err
+    }
   }
 
   insertMany = async (data: Record[], collectionName: string): Promise<any[]> => {
-    const db = this.client.db(SYS.databaseName)
-    const collection = db.collection(collectionName)
-    const recordsProps = data.map(r => r.record)
-    const saveResponse = await collection.insertMany(recordsProps)
+    try {
+      const collection = this.db.collection(collectionName)
+      const recordsProps = data.map(r => r.record)
+      const saveResponse = await collection.insertMany(recordsProps)
     return saveResponse.ops
+    } catch (err) {
+      throw err
+    }
   }
 
   connect = async () => {
@@ -33,6 +39,10 @@ class Db {
 
   disconnect = async () => {
     await this.client.close()
+  }
+
+  get db () {
+    return this.client.db(SYS.databaseName)
   }
 }
 
