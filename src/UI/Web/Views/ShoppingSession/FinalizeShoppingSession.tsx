@@ -1,9 +1,8 @@
 import * as React from 'react'
 import history from '../history'
-import InMemoryItemRepository from '../../../../Repositories/ItemRepository/InMemoryItemRepository'
-import IItemRepository from '../../../../Interfaces/Repositories/IItemRepository'
-import ShoppingSession from '../../../../Entities/ShoppingSession/ShoppingSession'
-import { AppBar, Avatar, Backdrop, Button, CircularProgress, ListItemAvatar, ListItemSecondaryAction, Switch, Toolbar, Zoom, List, ListItem, ListItemText } from '@material-ui/core'
+import FinalizeShoppingSessionController from '../../Controllers/FinalizeShoppingSessionController'
+
+import { AppBar, Avatar, Backdrop, Button, CircularProgress, ListItemAvatar, ListItemSecondaryAction, Switch, Toolbar, Zoom, List, ListItem, ListItemText, Snackbar } from '@material-ui/core'
 import { ShoppingCart, Cancel } from '@material-ui/icons'
 import './styles.css'
 
@@ -11,19 +10,22 @@ interface FinalizeShoppingSessionProps { }
 
 interface FinalizeShoppingSessionState {
   checkedItems: string[],
-  isFinalizing: boolean
+  isFinalizing: boolean,
+  showSuccessMessage: boolean,
+  showErrorMessage: boolean
 }
 
-class FinalizeShoppingSessionItems extends React.Component<FinalizeShoppingSessionProps, FinalizeShoppingSessionState> {
-  private itemRepository: IItemRepository
+class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionProps, FinalizeShoppingSessionState> {
+  private controller = new FinalizeShoppingSessionController()
 
   constructor (props = {}) {
     super(props)
 
-    this.itemRepository = new InMemoryItemRepository()
     this.state = {
-      checkedItems: this.itemRepository.items.map(i => i.id),
-      isFinalizing: false
+      checkedItems: this.controller.shoppingSession.items.map(i => i.id),
+      isFinalizing: false,
+      showSuccessMessage: false,
+      showErrorMessage: false
     }
   }
 
@@ -33,14 +35,13 @@ class FinalizeShoppingSessionItems extends React.Component<FinalizeShoppingSessi
 
   onSubmit = async () => {
     this.setState({ isFinalizing: true })
-    const itemsToKeep = this.itemRepository.items.filter(i => {
-      return this.state.checkedItems.includes(i.id)
-    })
 
-    const shoppingSession = new ShoppingSession({ items: itemsToKeep })
-    shoppingSession.finalize()
-    await new Promise(resolve => setTimeout(resolve, 600));  
+    const response: Response = await this.controller.submit(this.state.checkedItems)
+    if (response.status === 201) {
+      this.setState({ showSuccessMessage: true })
+    }
     this.setState({ isFinalizing: false })
+    await new Promise(resolve => setTimeout(resolve, 1000))
     history.push('/')
   }
 
@@ -57,7 +58,7 @@ class FinalizeShoppingSessionItems extends React.Component<FinalizeShoppingSessi
   }
 
   renderItemLineItems = () => {
-    return this.itemRepository.items.map(i => {
+    return this.controller.shoppingSession.items.map(i => {
       return <Zoom in key={i.id}>
         <div style={{transitionDelay: '1000ms'}}>
         <ListItem>
@@ -79,8 +80,7 @@ class FinalizeShoppingSessionItems extends React.Component<FinalizeShoppingSessi
   }
 
   render() {
-    return <div className='FinalizeShoppingSessionItems'>
-
+    return <div className='FinalizeShoppingSession'>
       <List>
         { this.renderItemLineItems() }
       </List>
@@ -97,12 +97,14 @@ class FinalizeShoppingSessionItems extends React.Component<FinalizeShoppingSessi
         </Toolbar>
       </AppBar>
 
-      
-      <Backdrop style={{zIndex: 999999999}} open={this.state.isFinalizing}>
+      <Backdrop style={{zIndex: 100}} open={this.state.isFinalizing}>
         <CircularProgress color='primary' />
       </Backdrop>
+
+      <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={this.state.showSuccessMessage} message='Success'/>
+      <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={this.state.showErrorMessage} message='Issue Finalizing'/>
     </div>
   }
 }
 
-export default FinalizeShoppingSessionItems
+export default FinalizeShoppingSession

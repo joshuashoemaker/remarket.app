@@ -1,14 +1,10 @@
 import * as React from 'react'
 import history from '../history'
-import { v4 as uuidv4 } from 'uuid'
 import makeItem from '../../../../Factories/Item/makeItem'
 import makeItemClothing from '../../../../Factories/Item/makeItemClothing'
 import AddItemToShoppingSessionController from '../../Controllers/AddItemToShoppingSessionController'
-import makeInMemoryItemRepository from '../../../../Factories/makeInMemoryItemRepository'
 import AddItemDetailOptions from './AddItemDetail/AddItemDetailOptions'
 import IItem from '../../../../Interfaces/Entities/IItem'
-import InMemoryItemRepository from '../../../../Repositories/ItemRepository/InMemoryItemRepository'
-import IItemRepository from '../../../../Interfaces/Repositories/IItemRepository'
 
 import { AppBar, Box, Button, Chip, IconButton, MenuItem, TextField, Toolbar } from '@material-ui/core'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
@@ -32,20 +28,16 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
   private fileInput: React.RefObject<HTMLInputElement>
   private controller: AddItemToShoppingSessionController
   private itemDetailOptions: AddItemDetailOptions
-  private itemRepository: IItemRepository
-  private itemId: string
   private item: IItem | undefined
 
   constructor (props: AddItemProps) {
     super(props)
 
-    this.controller = new AddItemToShoppingSessionController({ makeItemRepository: makeInMemoryItemRepository, makeItem: makeItem })
-    this.itemDetailOptions = new AddItemDetailOptions({/* empty props */})
-    this.itemRepository = new InMemoryItemRepository()
-    this.item = this.itemRepository.findById(this.getItemIdFromUrl())
+    const itemIdFromUrl: string | undefined = this.getItemIdFromUrl()
 
-    if (this.item) this.itemId = this.item.id
-    else this.itemId = uuidv4()
+    this.controller = new AddItemToShoppingSessionController({ itemId: itemIdFromUrl, makeItem: makeItem })
+    this.itemDetailOptions = new AddItemDetailOptions({/* empty props */})
+    this.item = this.controller.currentItem
 
     this.state = {
       itemImageSrc: this.item?.imageUri || 'https://designshack.net/wp-content/uploads/placeholder-image.png',
@@ -119,7 +111,7 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
 
   onSubmit = () => {
     let itemProps = {
-      id: this.itemId,
+      id: this.controller.itemId,
       imageUri: this.state.itemImageSrc,
       cost: this.state.cost || undefined,
       type: this.state.type === 'NA' ? undefined : this.state.type,
