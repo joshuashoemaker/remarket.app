@@ -3,11 +3,10 @@ import IItem from '../../../Interfaces/Entities/IItem'
 import axios from 'axios'
 
 class FinalizeShoppingSessionController {
+  public shoppingSession = new ShoppingSession()
 
-  submit = async (items: IItem[]) => {
-    const shoppingSession = new ShoppingSession({ items })
-    const shoppingSessionRequest = shoppingSession.finalize()
-    console.log(JSON.stringify(shoppingSessionRequest))
+  submit = async (itemIdsTtFinalize?: string[]): Promise<Response> => {
+    const shoppingSessionRequest = this.shoppingSession.finalize(itemIdsTtFinalize)
     let shoppingSessionResponse = {}
     try {
       shoppingSessionResponse = await axios.post(
@@ -18,7 +17,7 @@ class FinalizeShoppingSessionController {
     } catch (err) {
       console.log(err)
     }
-    return shoppingSessionResponse
+    return shoppingSessionResponse as Response
   }
 }
 

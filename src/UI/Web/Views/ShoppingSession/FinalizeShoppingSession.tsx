@@ -1,31 +1,31 @@
 import * as React from 'react'
 import history from '../history'
-import InMemoryItemRepository from '../../../../Repositories/ItemRepository/InMemoryItemRepository'
-import IItemRepository from '../../../../Interfaces/Repositories/IItemRepository'
-import ShoppingSession from '../../../../Entities/ShoppingSession/ShoppingSession'
-import { AppBar, Avatar, Backdrop, Button, CircularProgress, ListItemAvatar, ListItemSecondaryAction, Switch, Toolbar, Zoom, List, ListItem, ListItemText } from '@material-ui/core'
+import FinalizeShoppingSessionController from '../../Controllers/FinalizeShoppingSessionController'
+
+import { AppBar, Avatar, Backdrop, Button, CircularProgress, ListItemAvatar, ListItemSecondaryAction, Switch, Toolbar, Zoom, List, ListItem, ListItemText, Snackbar } from '@material-ui/core'
 import { ShoppingCart, Cancel } from '@material-ui/icons'
 import './styles.css'
-import FinalizeShoppingSessionController from '../../Controllers/FinalizeShoppingSessionController'
 
 interface FinalizeShoppingSessionProps { }
 
 interface FinalizeShoppingSessionState {
   checkedItems: string[],
-  isFinalizing: boolean
+  isFinalizing: boolean,
+  showSuccessMessage: boolean,
+  showErrorMessage: boolean
 }
 
 class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionProps, FinalizeShoppingSessionState> {
-  private itemRepository: IItemRepository
-  private finalizeShoppingSessionController = new FinalizeShoppingSessionController()
+  private controller = new FinalizeShoppingSessionController()
 
   constructor (props = {}) {
     super(props)
 
-    this.itemRepository = new InMemoryItemRepository()
     this.state = {
-      checkedItems: this.itemRepository.items.map(i => i.id),
-      isFinalizing: false
+      checkedItems: this.controller.shoppingSession.items.map(i => i.id),
+      isFinalizing: false,
+      showSuccessMessage: false,
+      showErrorMessage: false
     }
   }
 
@@ -35,17 +35,13 @@ class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionPro
 
   onSubmit = async () => {
     this.setState({ isFinalizing: true })
-    const itemsToKeep = this.itemRepository.items.filter(i => {
-      return this.state.checkedItems.includes(i.id)
-    })
 
-    const response = await this.finalizeShoppingSessionController.submit(itemsToKeep)
-
-    console.log(response)
-    // const shoppingSession = new ShoppingSession({ items: itemsToKeep })
-    // shoppingSession.finalize()
-    // await new Promise(resolve => setTimeout(resolve, 600));  
+    const response: Response = await this.controller.submit(this.state.checkedItems)
+    if (response.status === 201) {
+      this.setState({ showSuccessMessage: true })
+    }
     this.setState({ isFinalizing: false })
+    await new Promise(resolve => setTimeout(resolve, 1000))
     history.push('/')
   }
 
@@ -62,7 +58,7 @@ class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionPro
   }
 
   renderItemLineItems = () => {
-    return this.itemRepository.items.map(i => {
+    return this.controller.shoppingSession.items.map(i => {
       return <Zoom in key={i.id}>
         <div style={{transitionDelay: '1000ms'}}>
         <ListItem>
@@ -85,7 +81,6 @@ class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionPro
 
   render() {
     return <div className='FinalizeShoppingSession'>
-
       <List>
         { this.renderItemLineItems() }
       </List>
@@ -102,10 +97,12 @@ class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionPro
         </Toolbar>
       </AppBar>
 
-      
-      <Backdrop style={{zIndex: 999999999}} open={this.state.isFinalizing}>
+      <Backdrop style={{zIndex: 100}} open={this.state.isFinalizing}>
         <CircularProgress color='primary' />
       </Backdrop>
+
+      <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={this.state.showSuccessMessage} message='Success'/>
+      <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'center'}} open={this.state.showErrorMessage} message='Issue Finalizing'/>
     </div>
   }
 }

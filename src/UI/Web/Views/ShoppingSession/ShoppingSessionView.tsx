@@ -1,23 +1,20 @@
 import * as React from 'react'
 import history from '../history'
-import IItemRepository from '../../../../Interfaces/Repositories/IItemRepository'
-import InMemoryItemRepository from '../../../../Repositories/ItemRepository/InMemoryItemRepository'
+import ShoppingSession from '../../../../Entities/ShoppingSession/ShoppingSession'
 
 import ShoppingSessionPlaceholder from './ShoppingSessionPlaceholder'
 import ShoppingSessionItem from './ShoppingSessionItem'
 import { AppBar, Button, IconButton, Toolbar, Zoom } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
-import CancelIcon from '@material-ui/icons/Cancel'
-import './styles.css'
 import { CheckCircle } from '@material-ui/icons'
+import './styles.css'
 
-class ShoppingSession extends React.Component {
-  private itemRepository: IItemRepository
+class ShoppingSessionView extends React.Component {
+  private model: ShoppingSession
 
   constructor (props: {}) {
     super(props)
-    this.itemRepository = new InMemoryItemRepository()
-    console.log(this.itemRepository.items)
+    this.model = new ShoppingSession()
   }
 
   onAddItemClick = () => {
@@ -29,13 +26,13 @@ class ShoppingSession extends React.Component {
   }
 
   renderItems = () => {
-    if (this.itemRepository.items.length <= 0) return <Zoom in>
+    if (this.model.items.length <= 0) return <Zoom in>
         <div style={{transitionDelay: '1000ms'}}>
           <ShoppingSessionPlaceholder />
         </div>
       </Zoom>
 
-    return this.itemRepository.items.map((item, index) => {
+    return this.model.items.map((item, index) => {
       return <Zoom in key={item.id}>
         <div style={{transitionDelay:  `${index * 10000}ms`}}>
           <ShoppingSessionItem item={item} />
@@ -62,4 +59,4 @@ class ShoppingSession extends React.Component {
   }
 }
 
-export default ShoppingSession
+export default ShoppingSessionView

@@ -7,7 +7,8 @@ interface IShoppingSession {
   subtotal: number,
   tax: number,
   total: number,
-  finalize(): IShoppingSessionRequest
+  destructor(): void,
+  finalize(idsOfItemsToKeep?: string[]): IShoppingSessionRequest
 }
 
 export default IShoppingSession
