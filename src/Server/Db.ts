@@ -16,7 +16,6 @@ class Db {
     const db = this.client.db(SYS.databaseName)
     const collection = db.collection(collectionName)
     const saveResponse = await collection.insertOne(data.record)
-    console.log(saveResponse.ops)
     return saveResponse.ops[0]
   }
 

@@ -8,6 +8,7 @@ interface ApiItemResponse {
   descriptiveTags?: string[],
   imageUri?: string,
   createdDate?: Date
+  isProcessed: boolean
 }
 
 export default ApiItemResponse

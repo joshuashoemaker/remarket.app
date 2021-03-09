@@ -11,15 +11,15 @@ class Server {
     if (!instance) instance = this
 
     this.setupService()
-    this.setupRoutes()
     this.setupHeaderOptions()
+    this.setupRoutes()
 
     return instance
   }
 
   setupService = () => {
-    this.service.use(express.json())
-    this.service.use(express.urlencoded({ extended: false }))
+    this.service.use(express.json({limit: '10000kb'}))
+    this.service.use(express.urlencoded({ extended: true }))
     this.service.use(express.static(path.join(process.cwd(), '/dist/webapp')))
     this.service.use(session({
       secret: '123',
@@ -39,7 +39,7 @@ class Server {
     this.service.use((request, response, next) => {
       response.header('Access-Control-Allow-Origin', request.headers.origin || '*')
       response.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,HEAD,DELETE,OPTIONS')
-      response.header('Access-Control-Allow-Headers', 'Content-Type,x-requested-with')
+      response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
       next()
     })
   }

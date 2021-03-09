@@ -1,6 +1,6 @@
 import express from 'express'
 import Db from '../Db'
-import IItemRequest from '../../Interfaces/RequestObjects/IItemRequest'
+import errorCodes from '../StaticDataStructures/errorCodes'
 import IShoppingSessionRequest from '../../Interfaces/RequestObjects/IShoppingSessionRequest'
 import DbItem from '../Entities/DbItem'
 import DbShoppingSession from '../Entities/DbShoppingSession'
@@ -14,28 +14,60 @@ const db = new Db()
 
 router.post('/', async (request, response) => {
   const { userId } = request.headers
-  const { id } = request.body as IShoppingSessionRequest
-  const items = request.body.items as IItemRequest[]
+  const { id, subtotal, tax, total, items } = request.body as IShoppingSessionRequest
 
-  const shoppingSession = new DbShoppingSession({ id })
-  const itemsInShoppingSession = items.map(i => new DbItem(i))
-
-  await db.connect()
-  const shoppingSessionDbSaveResponse: MongoShoppingSessionResponse = await db.insertOne(shoppingSession, 'ShoppingSession')
-  const itemsDbSaveResponse: MongoItemResponse[] = await db.insertMany(itemsInShoppingSession, 'Items')
-
-  const itemsResponse: ApiItemResponse[] = itemsDbSaveResponse.map(i => {
-    return {...i, ...{id: i._id}}
-  })
-
-  const shoppingSessionRespone: ApiShoppingSessionResponse = {
-    id: shoppingSessionDbSaveResponse._id,
-    createdDate: shoppingSessionDbSaveResponse.createdDate,
-    modifiedDate: shoppingSessionDbSaveResponse.modifiedDate,
-    items: itemsResponse
+  let responseToClient = {
+    message: errorCodes.OK,
+    data: {}
   }
 
-  response.send(shoppingSessionRespone)
+  if (!items?.length) {
+    responseToClient.message = errorCodes.Err10
+    response.status(500)
+    response.send(responseToClient)
+    return
+  }
+
+  const shoppingSession = new DbShoppingSession({ id, subtotal, tax, total, items })
+  const itemsInShoppingSession = items.map(i => new DbItem(i))
+
+  let shoppingSessionDbSaveResponse: MongoShoppingSessionResponse
+  try {
+    shoppingSessionDbSaveResponse = await db.insertOne(shoppingSession, 'ShoppingSession')
+  } catch (err) {
+    console.log(err)
+    responseToClient.message = errorCodes.Err10
+    response.status(500)
+    response.send(responseToClient)
+    return
+  }
+
+  let itemsDbSaveResponse: MongoItemResponse[]
+  try {
+    itemsDbSaveResponse = await db.insertMany(itemsInShoppingSession, 'Items')
+  } catch (err) {
+    console.log(err)
+    responseToClient.message = errorCodes.Err20
+    response.status(500)
+    response.send(responseToClient)
+    return
+  }
+
+    const itemsResponse: ApiItemResponse[] = itemsDbSaveResponse.map(i => {
+      return {...i, ...{id: i._id}}
+    })
+
+    const shoppingSessionRespone: ApiShoppingSessionResponse = {
+      id: shoppingSessionDbSaveResponse._id,
+      createdDate: shoppingSessionDbSaveResponse.createdDate,
+      modifiedDate: shoppingSessionDbSaveResponse.modifiedDate,
+      items: itemsResponse
+    }
+
+    responseToClient.data = shoppingSessionRespone
+    
+    response.status(201)
+    response.send(responseToClient)
 })
 
 export default router

@@ -4,6 +4,8 @@ import makeItemClothing from '../../Factories/Item/makeItemClothing'
 import ShoppingSessionConstructor from '../../Interfaces/Contructors/ShoppingSessionConstructor'
 import IItem from '../../Interfaces/Entities/IItem'
 import IShoppingSession from '../../Interfaces/Entities/IShoppingSession'
+import IItemRequest from '../../Interfaces/RequestObjects/IItemRequest'
+import IShoppingSessionRequest from '../../Interfaces/RequestObjects/IShoppingSessionRequest'
 
 class ShoppingSession implements IShoppingSession {
   readonly id: string
@@ -28,26 +30,26 @@ class ShoppingSession implements IShoppingSession {
 
   get subtotal () {
     if (this._subtotal) return this._subtotal
-    if (this.items.length <= 0) return
+    if (this.items.length <= 0) return 0
 
     let subtotal = 0
     this.items.forEach(i => {
       if (i.cost) subtotal = subtotal + i.cost
     })
 
-    if (subtotal) return subtotal
+    return subtotal
   }
 
-  set subtotal (value) {
+  set subtotal (value: number) {
     this._subtotal = value
   }
 
   get tax () {
-    if (!this.subtotal) return
+    if (!this.subtotal) return 0
     return this._tax ?? this.subtotal * 0.10
   }
 
-  set tax (value) {
+  set tax (value: number) {
     this._tax = value
   }
 
@@ -62,11 +64,14 @@ class ShoppingSession implements IShoppingSession {
     this._total = value
   }
 
-  finalize = () => {
-    console.log(this.items)
-    console.log(this.subtotal)
-    console.log(this.tax)
-    console.log(this.total)
+  finalize = (): IShoppingSessionRequest => {
+    return {
+      id: this.id,
+      subtotal: this.subtotal,
+      tax: this.tax,
+      total: this.total,
+      items: this.items as IItemRequest[]
+    }
   }
 }
 

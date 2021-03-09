@@ -7,7 +7,8 @@ interface IItemRequest {
   cost?: number,
   descriptiveTags?: string[],
   imageUri?: string,
-  createdDate?: Date
+  createdDate?: Date,
+  isProccessed?: boolean
 }
 
 export default IItemRequest

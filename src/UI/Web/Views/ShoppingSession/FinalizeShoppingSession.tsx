@@ -6,6 +6,7 @@ import ShoppingSession from '../../../../Entities/ShoppingSession/ShoppingSessio
 import { AppBar, Avatar, Backdrop, Button, CircularProgress, ListItemAvatar, ListItemSecondaryAction, Switch, Toolbar, Zoom, List, ListItem, ListItemText } from '@material-ui/core'
 import { ShoppingCart, Cancel } from '@material-ui/icons'
 import './styles.css'
+import FinalizeShoppingSessionController from '../../Controllers/FinalizeShoppingSessionController'
 
 interface FinalizeShoppingSessionProps { }
 
@@ -16,6 +17,7 @@ interface FinalizeShoppingSessionState {
 
 class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionProps, FinalizeShoppingSessionState> {
   private itemRepository: IItemRepository
+  private finalizeShoppingSessionController = new FinalizeShoppingSessionController()
 
   constructor (props = {}) {
     super(props)
@@ -37,9 +39,12 @@ class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionPro
       return this.state.checkedItems.includes(i.id)
     })
 
-    const shoppingSession = new ShoppingSession({ items: itemsToKeep })
-    shoppingSession.finalize()
-    await new Promise(resolve => setTimeout(resolve, 600));  
+    const response = await this.finalizeShoppingSessionController.submit(itemsToKeep)
+
+    console.log(response)
+    // const shoppingSession = new ShoppingSession({ items: itemsToKeep })
+    // shoppingSession.finalize()
+    // await new Promise(resolve => setTimeout(resolve, 600));  
     this.setState({ isFinalizing: false })
     history.push('/')
   }

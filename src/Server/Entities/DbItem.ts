@@ -11,6 +11,7 @@ class DbItem implements Record {
   private readonly descriptiveTags?: string[]
   private readonly imageUri?: string
   private _createdDate?: Date
+  private isProcessed: boolean
 
   constructor (item: IItemRequest) {
     this._id = item.id
@@ -22,6 +23,7 @@ class DbItem implements Record {
     this.descriptiveTags = item.descriptiveTags
     this.imageUri = item.imageUri
     this._createdDate = item.createdDate
+    this.isProcessed = item.isProccessed || false
   }
 
   public get createdDate () {
@@ -44,7 +46,8 @@ class DbItem implements Record {
       descriptiveTags: this.descriptiveTags,
       imageUri: this.imageUri,
       createdDate: this.createdDate,
-      modifiedDate: this.modifiedDate
+      modifiedDate: this.modifiedDate,
+      isProcessed: this.isProcessed
     }
   }
 }

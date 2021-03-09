@@ -8,6 +8,7 @@ interface MongoItemResponse {
   descriptiveTags?: string[],
   imageUri?: string,
   createdDate?: Date
+  isProcessed: boolean
 }
 
 export default MongoItemResponse

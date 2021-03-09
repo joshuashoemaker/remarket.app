@@ -5,10 +5,12 @@ import Record from '../Interfaces/Database/Record'
 class DbShoppingSession implements Record {
   public readonly _id: string
   private _createdDate?: Date
+  private itemIds: string[]
 
   constructor (shoppingSession: IShoppingSessionRequest) {
     this._id = shoppingSession.id
     this._createdDate = shoppingSession.createdDate
+    this.itemIds = shoppingSession.items.map(i => i.id)
   }
 
   public get createdDate () {
@@ -24,7 +26,8 @@ class DbShoppingSession implements Record {
     return {
       _id: this._id,
       createdDate: this.createdDate,
-      modifiedDate: this.modifiedDate
+      modifiedDate: this.modifiedDate,
+      itemIds: this.itemIds
     }
   }
 }
