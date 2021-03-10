@@ -12,7 +12,9 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       width: '100%',
       position: 'fixed',
-      bottom: 40
+      bottom: 40,
+      backgroundColor: 'white',
+      zIndex: 100
     },
     backButton: {
       marginRight: theme.spacing(1)

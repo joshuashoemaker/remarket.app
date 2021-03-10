@@ -8,20 +8,20 @@
 }
 
 .EditInventoryItemSection .itemImageSection {
+  background-color: #292a2c;
   position: relative;
 }
 
 .EditInventoryItemSection img {
   display: block;
-  max-height: 350px;
-  max-width: 100%;
+  height: 240px;
   margin: auto;
 }
 
 .EditInventoryItemSection .addItemImageIcon {
   background-color: #03DAC5;
   position: absolute;
-  bottom: -6%;
+  bottom: -8%;
   right: 4%;
   z-index: 1000;
 }
