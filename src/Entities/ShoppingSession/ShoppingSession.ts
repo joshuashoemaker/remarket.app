@@ -32,7 +32,7 @@ class ShoppingSession implements IShoppingSession {
   }
 
   get items (): IItem[] {
-    return this.itemRepository.items
+    return this.itemRepository.items!
   }
 
   get subtotal () {
@@ -72,7 +72,7 @@ class ShoppingSession implements IShoppingSession {
   }
 
   finalize = (idsOfItemsToKeep?: string[]): IShoppingSessionRequest => {
-    const itemIds = idsOfItemsToKeep || this.itemRepository.items.map(i => i.id)
+    const itemIds = idsOfItemsToKeep || this.itemRepository.items!.map(i => i.id)
     const items = this.items.filter(i => itemIds.includes(i.id))
     return {
       id: this.id,

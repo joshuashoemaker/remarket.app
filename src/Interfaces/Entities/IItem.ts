@@ -7,6 +7,8 @@ interface IItem {
   cost?: number,
   descriptiveTags?: string[],
   imageUri?: string,
+  isProcessed: boolean,
+  isSold: boolean,
   addDescriptiveTag(tag: string): void,
   removeDescriptiveTag(tag: string): void
 }

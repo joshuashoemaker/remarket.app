@@ -10,6 +10,8 @@ class Item implements IItem {
   public label: string | undefined
   public descriptiveTags: string[]
   public imageUri: string | undefined
+  public isProcessed: boolean
+  public isSold: boolean
 
   constructor(props: ItemConstructor) {
     this.id = props.id
@@ -19,6 +21,8 @@ class Item implements IItem {
     this.label = props.label
     this.descriptiveTags = props.descriptiveTags || []
     this.imageUri = props.imageUri
+    this.isProcessed = props.isProcessed || false
+    this.isSold = props.isSold || false
   }
 
   addDescriptiveTag = (tag: string): void => {

@@ -9,6 +9,7 @@ interface ApiItemResponse {
   imageUri?: string,
   createdDate?: Date
   isProcessed: boolean
+  isSold: boolean
 }
 
 export default ApiItemResponse

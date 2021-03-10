@@ -2,7 +2,8 @@ import ItemConstructor from '../Contructors/ItemConstructor'
 import IItem from '../Entities/IItem'
 
 interface IItemRepository {
-  items: IItem[],
+  items?: IItem[],
+  getAllItems?(): Promise<IItem[] | null>,
   addItem(item: IItem): void,
   editById(id: string, modifications: ItemConstructor): IItem,
   findById(id: string): IItem | undefined,

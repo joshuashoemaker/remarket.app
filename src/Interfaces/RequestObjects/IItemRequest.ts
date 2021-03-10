@@ -9,6 +9,7 @@ interface IItemRequest {
   imageUri?: string,
   createdDate?: Date,
   isProccessed?: boolean
+  isSold?: boolean
 }
 
 export default IItemRequest

@@ -1,5 +1,4 @@
 import ShoppingSession from '../../../Entities/ShoppingSession/ShoppingSession'
-import IItem from '../../../Interfaces/Entities/IItem'
 import axios from 'axios'
 
 class FinalizeShoppingSessionController {
@@ -9,7 +8,7 @@ class FinalizeShoppingSessionController {
     const shoppingSessionRequest = this.shoppingSession.finalize(itemIdsTtFinalize)
     let shoppingSessionResponse = {}
     try {
-      shoppingSessionResponse = await axios.post(
+      shoppingSessionResponse: Response = await axios.post(
         'http://localhost:5005/api/shoppingSession',
         shoppingSessionRequest, {
         headers: { 'Content-Type': 'application/json' }

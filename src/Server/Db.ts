@@ -12,6 +12,17 @@ class Db {
     return instance
   }
 
+  find = async (query: Object, collectionName: string): Promise<any> => {
+    try {
+      const collection = this.db.collection(collectionName)
+      const findResposne = await collection.find(query).toArray()
+      return findResposne
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  }
+
   insertOne = async (data: Record, collectionName: string): Promise<any> => {
     try {
       const collection = this.db.collection(collectionName)
