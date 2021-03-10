@@ -7,9 +7,10 @@ interface ApiItemResponse {
   cost?: number,
   descriptiveTags?: string[],
   imageUri?: string,
-  createdDate?: Date
-  isProcessed: boolean
-  isSold: boolean
+  createdDate?: Date,
+  isProcessed: boolean,
+  isSold: boolean,
+  sellPrice?: number
 }
 
 export default ApiItemResponse

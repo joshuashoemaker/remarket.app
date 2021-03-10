@@ -38,7 +38,7 @@ class MongoDbItemRepository implements IItemRepository {
         modifications,
         { headers: {'Content-Type': 'application/json'} }
       )
-      if (itemResponse.status !== 200) return null
+      if (itemResponse.status !== 201) return null
       const itemFromApi = itemResponse.data.data as ApiItemResponse
       if (itemFromApi.type === 'clothing') item = makeItemClothing(itemFromApi as ItemClothingConstructor)
       else item = makeItem(itemFromApi as ItemConstructor)

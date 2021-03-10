@@ -12,7 +12,8 @@ interface ItemConstructor {
   isProcessed?: boolean
   isSold?: boolean,
   marketPlatform?: MarketPlatforms,
-  listedPrice?: number
+  listedPrice?: number,
+  sellPrice?: number
 }
 
 export default ItemConstructor

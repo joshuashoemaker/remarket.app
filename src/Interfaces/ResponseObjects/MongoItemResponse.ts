@@ -9,7 +9,8 @@ interface MongoItemResponse {
   imageUri?: string,
   createdDate?: Date
   isProcessed: boolean,
-  isSold: boolean
+  isSold: boolean,
+  sellPrice?: number
 }
 
 export default MongoItemResponse

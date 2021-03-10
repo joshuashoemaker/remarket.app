@@ -13,6 +13,7 @@ interface IItem {
   isSold: boolean,
   marketPlatform?: MarketPlatforms,
   listedPrice?: number,
+  sellPrice?: number,
   addDescriptiveTag(tag: string): void,
   removeDescriptiveTag(tag: string): void
 }

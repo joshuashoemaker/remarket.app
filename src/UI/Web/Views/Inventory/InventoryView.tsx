@@ -37,7 +37,7 @@ class InventoryView extends React.Component<InventoryViewProps, InventoryViewSta
   }
 
   isItemSold = (id: string): boolean => {
-    return this.state.processedItemIds?.includes(id) || false
+    return this.state.soldItemIds?.includes(id) || false
   }
 
   toggleItemIsProcessedCheckedById = async (id: string) => {
@@ -65,19 +65,19 @@ class InventoryView extends React.Component<InventoryViewProps, InventoryViewSta
 
     this.setState({ soldItemIds })
     await new Promise(resolve => setTimeout(resolve, 200))
-    history.push(`/inventory/edit/${id}`)
+    history.push(`/inventory/sell/${id}`)
   }
 
   renderSwitch = (item: IItem) => {
     if (!item.isProcessed) return <FormControlLabel
       value="top"
-      control={<Switch color="primary" edge='end' onChange={() => { this.toggleItemIsProcessedCheckedById(item.id) }} />}
+      control={<Switch color="primary" edge='end' checked={this.isItemProcessed(item.id)} onChange={() => { this.toggleItemIsProcessedCheckedById(item.id) }} />}
       label="Proccessed"
       labelPlacement="top"
     />
     else return <FormControlLabel
       value="top"
-      control={<Switch color="secondary" edge='end' onChange={() => { this.toggleItemIsSoldCheckedById(item.id) }} />}
+      control={<Switch color="secondary" edge='end' checked={this.isItemSold(item.id)} disabled={item.isSold} onChange={() => { this.toggleItemIsSoldCheckedById(item.id) }} />}
       label="Sold"
       labelPlacement="top"
     />

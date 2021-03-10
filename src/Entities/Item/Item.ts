@@ -15,6 +15,7 @@ class Item implements IItem {
   public isSold: boolean
   public marketPlatform: MarketPlatforms
   public listedPrice?: number
+  public sellPrice?: number
 
   constructor(props: ItemConstructor) {
     this.id = props.id
@@ -28,6 +29,7 @@ class Item implements IItem {
     this.isSold = props.isSold || false
     this.marketPlatform = props.marketPlatform || MarketPlatforms.none
     this.listedPrice = props.listedPrice
+    this.sellPrice = props.sellPrice
   }
 
   addDescriptiveTag = (tag: string): void => {
