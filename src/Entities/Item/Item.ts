@@ -1,17 +1,20 @@
 import IItem from '../../Interfaces/Entities/IItem'
 import ItemConstructor from '../../Interfaces/Contructors/ItemConstructor'
+import MarketPlatforms from '../../StaticDataStructures/MarketPlatforms'
 
 class Item implements IItem {
   readonly id: string
-  readonly shoppingSessionId: string | undefined
-  public brand: string | undefined
-  public type: string | undefined
-  public cost: number | undefined
-  public label: string | undefined
+  readonly shoppingSessionId?: string
+  public brand?: string
+  public type?: string
+  public cost?: number
+  public label?: string
   public descriptiveTags: string[]
-  public imageUri: string | undefined
+  public imageUri?: string
   public isProcessed: boolean
   public isSold: boolean
+  public marketPlatform: MarketPlatforms
+  public listedPrice?: number
 
   constructor(props: ItemConstructor) {
     this.id = props.id
@@ -23,6 +26,8 @@ class Item implements IItem {
     this.imageUri = props.imageUri
     this.isProcessed = props.isProcessed || false
     this.isSold = props.isSold || false
+    this.marketPlatform = props.marketPlatform || MarketPlatforms.none
+    this.listedPrice = props.listedPrice
   }
 
   addDescriptiveTag = (tag: string): void => {

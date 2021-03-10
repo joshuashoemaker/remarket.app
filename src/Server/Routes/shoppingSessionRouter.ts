@@ -8,6 +8,7 @@ import MongoShoppingSessionResponse from '../../Interfaces/ResponseObjects/Mongo
 import MongoItemResponse from '../../Interfaces/ResponseObjects/MongoItemResponse'
 import ApiItemResponse from '../../Interfaces/ResponseObjects/ApiItemResponse'
 import ApiShoppingSessionResponse from '../../Interfaces/ResponseObjects/ApiShoppingSessionResponse'
+import DbItemClothing from '../Entities/DbItemClothing'
 
 const router = express.Router()
 const db = new Db()
@@ -29,7 +30,10 @@ router.post('/', async (request, response) => {
   }
 
   const shoppingSession = new DbShoppingSession({ id, subtotal, tax, total, items })
-  const itemsInShoppingSession = items.map(i => new DbItem(i))
+  const itemsInShoppingSession = items.map(i => {
+    if (i.type === 'clothing') return new DbItemClothing(i)
+    return new DbItem(i)
+  })
 
   let shoppingSessionDbSaveResponse: MongoShoppingSessionResponse
   try {
