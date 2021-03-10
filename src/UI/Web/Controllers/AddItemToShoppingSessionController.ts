@@ -23,7 +23,7 @@ class AddItemToShoppingSessionController {
   }
 
   get currentItem (): IItem | undefined {
-    return this.shoppingSession.itemRepository.findById(this.itemId)
+    return this.shoppingSession.itemRepository.findById(this.itemId) as IItem
   }
 
   set makeItemFactory (factory: Function) {

@@ -30,14 +30,39 @@ class MongoDbItemRepository implements IItemRepository {
 
   addItem = (item: IItem) => { /* Not implemented */ }
 
-  editById = (it: string, modifications: ItemConstructor): IItem => {
-    return new Item({id: 'Test'})
-    /* Not implemented */
+  editById = async (id: string, modifications: ItemConstructor): Promise<IItem | null> => {
+    let item: IItem | null = null
+    try {
+      const itemResponse = await axios.post(
+        `http://localhost:5005/api/item/edit/${id}`,
+        modifications,
+        { headers: {'Content-Type': 'application/json'} }
+      )
+      if (itemResponse.status !== 200) return null
+      const itemFromApi = itemResponse.data.data as ApiItemResponse
+      if (itemFromApi.type === 'clothing') item = makeItemClothing(itemFromApi as ItemClothingConstructor)
+      else item = makeItem(itemFromApi as ItemConstructor)
+    } catch (err) {
+      console.log(err)
+    }
+    
+    return item
   }
 
-  findById = (id: string) => {
-    return new Item({id: 'test'})
-    /* Not implemented */
+  findById = async (id: string): Promise<IItem | null> => {
+    let item: IItem
+    try {
+      const itemResponse = await axios.get(`http://localhost:5005/api/item/${id}`)
+      if (itemResponse.status !== 200) return null
+
+      const itemFromApi = itemResponse.data.data as ApiItemResponse
+
+      if (itemFromApi.type === 'clothing') return makeItemClothing(itemFromApi as ItemClothingConstructor)
+      else return makeItem(itemFromApi as ItemConstructor)
+    } catch (err) {
+      console.log(err)
+      return null
+    }
   }
 
   findByBrand = (brand: string) => {

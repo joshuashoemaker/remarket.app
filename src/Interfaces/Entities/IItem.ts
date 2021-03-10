@@ -1,3 +1,5 @@
+import MarketPlatforms from "../../StaticDataStructures/MarketPlatforms";
+
 interface IItem {
   id: string,
   shoppingSessionId?: string,
@@ -9,6 +11,8 @@ interface IItem {
   imageUri?: string,
   isProcessed: boolean,
   isSold: boolean,
+  marketPlatform?: MarketPlatforms,
+  listedPrice?: number,
   addDescriptiveTag(tag: string): void,
   removeDescriptiveTag(tag: string): void
 }

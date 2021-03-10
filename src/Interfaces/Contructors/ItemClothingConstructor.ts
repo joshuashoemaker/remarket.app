@@ -1,6 +1,6 @@
-import IItem from "../Entities/IItem";
+import ItemConstructor from './ItemConstructor'
 
-interface ItemClothingConstructor extends IItem {
+interface ItemClothingConstructor extends ItemConstructor {
   material?: string,
   timeOfProduction?: Date
 }

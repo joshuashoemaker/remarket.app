@@ -7,6 +7,7 @@ import InventoryView from './Inventory/InventoryView'
 import EditItemInShoppingSession from './ShoppingSession/EditItemInShoppingSession'
 import FinalizeShoppingSession from './ShoppingSession/FinalizeShoppingSession'
 import ShoppingSessionView from './ShoppingSession/ShoppingSessionView'
+import EditInventoryItem from './Inventory/EditInventoryItem'
 
 class App extends React.Component {
   render () {
@@ -18,6 +19,7 @@ class App extends React.Component {
       <Route exact path='/shoppingsession/edit/:id' component={() => <EditItemInShoppingSession />} />
       <Route exact path='/shoppingsession/finalize' component={() => <FinalizeShoppingSession />} />
       <Route exact path='/inventory' component={() => <InventoryView />} />
+      <Route exact path='/inventory/edit/:id' component={() => <EditInventoryItem />} />
     </main>
   }
 }

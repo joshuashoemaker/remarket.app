@@ -4,7 +4,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import './styles.css'
-import { Zoom, ListItemAvatar, Avatar, ListItemSecondaryAction, Switch } from '@material-ui/core'
+import { Zoom, ListItemAvatar, Avatar, ListItemSecondaryAction, Switch, Typography } from '@material-ui/core'
 import InventoryController from '../../Controllers/InventoryController'
 import IItem from '../../../../Interfaces/Entities/IItem'
 
@@ -34,7 +34,7 @@ class InventoryView extends React.Component<InventoryViewProps, InventoryViewSta
     return this.state.checkedItemIds?.includes(id) || false
   }
 
-  toggleItemCheckedById = (id: string) => {
+  toggleItemCheckedById = async (id: string) => {
     let checkedItemIds = [...this.state.checkedItemIds]
     if (checkedItemIds.includes(id)) {
       const index = checkedItemIds.findIndex(i => i === id)
@@ -44,6 +44,8 @@ class InventoryView extends React.Component<InventoryViewProps, InventoryViewSta
     }
 
     this.setState({ checkedItemIds })
+    await new Promise(resolve => setTimeout(resolve, 200))
+    history.push(`/inventory/edit/${id}`)
   }
 
   renderItems = () => {
@@ -52,6 +54,11 @@ class InventoryView extends React.Component<InventoryViewProps, InventoryViewSta
     const items = this.state.items
     return items.map(i => <Zoom in key={i.id}>
       <div style={{transitionDelay: '1000ms'}}>
+        
+      <Typography component='p' style={{textAlign: 'right', width: '95%', margin: 'auto'}}>
+        Processed
+      </Typography>
+
       <ListItem>
         <ListItemAvatar>
           <Avatar variant='rounded' alt={i.label} src={i.imageUri} />

@@ -23,6 +23,32 @@ class Db {
     }
   }
 
+  findOne = async (query: Object, collectionName: string): Promise<any> => {
+    try {
+      const collection = this.db.collection(collectionName)
+      const findResponse = await collection.findOne(query)
+      return findResponse
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  }
+
+  findOneAndUpdate = async (query: Object, collectionName: string, updateProps: Object): Promise<any> => {
+    try {
+      const collection = this.db.collection(collectionName)
+      const updateResponse = await collection.findOneAndUpdate(
+        query,
+        { $set: updateProps },
+        { upsert: true, returnOriginal: false }
+      )
+      return updateResponse
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  }
+
   insertOne = async (data: Record, collectionName: string): Promise<any> => {
     try {
       const collection = this.db.collection(collectionName)
