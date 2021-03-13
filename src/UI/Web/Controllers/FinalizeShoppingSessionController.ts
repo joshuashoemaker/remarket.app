@@ -9,7 +9,7 @@ class FinalizeShoppingSessionController {
     let shoppingSessionResponse = {}
     try {
       shoppingSessionResponse: Response = await axios.post(
-        'http://localhost:5005/api/shoppingSession',
+        'http://localhost:5005/api/protected/shoppingSession',
         shoppingSessionRequest, {
         headers: { 'Content-Type': 'application/json' }
       })

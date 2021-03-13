@@ -2,6 +2,7 @@ import express, { Express } from 'express'
 import session from 'express-session'
 import path from 'path'
 import apiRouter from './Routes/apiRouter'
+import SYS from '../SYS'
 
 let instance: Server | null
 
@@ -22,7 +23,7 @@ class Server {
     this.service.use(express.urlencoded({ extended: true }))
     this.service.use(express.static(path.join(process.cwd(), '/dist/webapp')))
     this.service.use(session({
-      secret: '123',
+      secret: SYS.sessionSecret,
       resave: true,
       saveUninitialized: true
     }))

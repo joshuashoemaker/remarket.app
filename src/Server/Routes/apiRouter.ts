@@ -1,10 +1,10 @@
 import express from 'express'
-import itemRouter from './itemRouter'
-import shoppingSessionRouter from './shoppingSessionRouter'
+import loginRouter from './loginRouter'
+import protectedApiRouter from './Protected/protectedApiRouter'
 
 const router = express.Router()
 
-router.use('/item', itemRouter)
-router.use('/shoppingSession', shoppingSessionRouter)
+router.use('/login', loginRouter)
+router.use('/protected', protectedApiRouter)
 
 export default router

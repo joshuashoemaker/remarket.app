@@ -12,7 +12,7 @@ class MongoDbItemRepository implements IItemRepository {
   getAllItems = async (): Promise<IItem[] | null> => {
     let items: IItem[]
     try {
-      const itemsResponse = await axios.get('http://localhost:5005/api/item')
+      const itemsResponse = await axios.get('http://localhost:5005/api/protected/item')
       if (itemsResponse.status !== 200) return null
 
       const itemsFromApi = itemsResponse.data.data as ApiItemResponse[]
@@ -34,7 +34,7 @@ class MongoDbItemRepository implements IItemRepository {
     let item: IItem | null = null
     try {
       const itemResponse = await axios.post(
-        `http://localhost:5005/api/item/edit/${id}`,
+        `http://localhost:5005/api/protected/item/edit/${id}`,
         modifications,
         { headers: {'Content-Type': 'application/json'} }
       )
@@ -52,7 +52,7 @@ class MongoDbItemRepository implements IItemRepository {
   findById = async (id: string): Promise<IItem | null> => {
     let item: IItem
     try {
-      const itemResponse = await axios.get(`http://localhost:5005/api/item/${id}`)
+      const itemResponse = await axios.get(`http://localhost:5005/api/protected/item/${id}`)
       if (itemResponse.status !== 200) return null
 
       const itemFromApi = itemResponse.data.data as ApiItemResponse
