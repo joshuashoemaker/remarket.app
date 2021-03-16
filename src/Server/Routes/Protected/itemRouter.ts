@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { query } from 'express'
 import ApiItemResponse from '../../../Interfaces/ResponseObjects/ApiItemResponse'
 import MongoItemResponse from '../../../Interfaces/ResponseObjects/MongoItemResponse'
 import Db from '../../Db'
@@ -18,6 +18,35 @@ router.get('/', async (request, response) => {
   let itemDbFindResponse: MongoItemResponse[]
   try {
     itemDbFindResponse = await db.find({ userId }, 'Items')
+  } catch (err) {
+    responseToClient.message = errorCodes.Err20
+    response.status(500)
+    response.send(responseToClient)
+    return
+  }
+
+  const itemsResponse: ApiItemResponse[] = itemDbFindResponse.map(i => {
+    return {...i, ...{id: i._id}}
+  })
+
+  responseToClient.data = itemsResponse
+  response.status(200)
+  response.send(responseToClient)
+})
+
+
+router.post('/_find', async (request, response) => {
+  const { userId } = request.session!
+  const query = request.body
+
+  let responseToClient = {
+    message: errorCodes.OK,
+    data: {}
+  }
+
+  let itemDbFindResponse: MongoItemResponse[]
+  try {
+    itemDbFindResponse = await db.find({ ...query, userId }, 'Items')
   } catch (err) {
     responseToClient.message = errorCodes.Err20
     response.status(500)
