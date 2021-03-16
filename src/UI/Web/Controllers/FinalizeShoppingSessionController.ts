@@ -1,22 +1,31 @@
 import ShoppingSession from '../../../Entities/ShoppingSession/ShoppingSession'
+import User from '../../../Entities/User/User'
 import axios from 'axios'
 
 class FinalizeShoppingSessionController {
   public shoppingSession = new ShoppingSession()
 
-  submit = async (itemIdsTtFinalize?: string[]): Promise<Response> => {
+  submit = async (itemIdsTtFinalize?: string[]): Promise<any> => {
     const shoppingSessionRequest = this.shoppingSession.finalize(itemIdsTtFinalize)
     let shoppingSessionResponse = {}
     try {
-      shoppingSessionResponse: Response = await axios.post(
-        'http://localhost:5005/api/protected/shoppingSession',
+      shoppingSessionResponse = await axios.post(
+        '/api/protected/shoppingSession',
         shoppingSessionRequest, {
-        headers: { 'Content-Type': 'application/json' }
-      })
+          headers: {
+            Authorization: `Bearer ${User.token}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        })
     } catch (err) {
       console.log(err)
     }
-    return shoppingSessionResponse as Response
+    return shoppingSessionResponse
+  }
+
+  destroyShoppingSession = () => {
+    this.shoppingSession.destructor()
   }
 }
 

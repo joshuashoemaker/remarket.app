@@ -14,7 +14,7 @@ const router = express.Router()
 const db = new Db()
 
 router.post('/', async (request, response) => {
-  const { userId } = request.headers
+  const { userId } = request.session!
   const { id, subtotal, tax, total, items } = request.body as IShoppingSessionRequest
 
   let responseToClient = {
@@ -29,8 +29,10 @@ router.post('/', async (request, response) => {
     return
   }
 
-  const shoppingSession = new DbShoppingSession({ id, subtotal, tax, total, items })
+  const shoppingSession = new DbShoppingSession({ id, subtotal, tax, total, items, userId })
   const itemsInShoppingSession = items.map(i => {
+    i.userId = userId
+    i.shoppingSessionId = id
     if (i.type === 'clothing') return new DbItemClothing(i)
     return new DbItem(i)
   })

@@ -1,6 +1,7 @@
 import express, { Express } from 'express'
 import session from 'express-session'
 import path from 'path'
+import cors from 'cors'
 import apiRouter from './Routes/apiRouter'
 import SYS from '../SYS'
 
@@ -20,6 +21,7 @@ class Server {
 
   setupService = () => {
     this.service.use(express.json({limit: '10000kb'}))
+    this.service.use(cors())
     this.service.use(express.urlencoded({ extended: true }))
     this.service.use(express.static(path.join(process.cwd(), '/dist/webapp')))
     this.service.use(session({
@@ -40,7 +42,7 @@ class Server {
     this.service.use((request, response, next) => {
       response.header('Access-Control-Allow-Origin', request.headers.origin || '*')
       response.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,HEAD,DELETE,OPTIONS')
-      response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+      response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
       next()
     })
   }

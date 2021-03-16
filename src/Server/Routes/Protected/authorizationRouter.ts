@@ -1,14 +1,14 @@
 import express from 'express'
+import errorCodes from '../../StaticDataStructures/errorCodes'
 
 const router = express.Router()
 
 router.use('/', (request, response, next) => {
-  console.log('auth', request.headers['authorization'])
   const authorizationHeader = request.headers['authorization'] as String
 
   if (!authorizationHeader) {
     response.status(401)
-    response.redirect('/login')
+    response.send(errorCodes.Err901)
     return
   }
 
@@ -17,7 +17,7 @@ router.use('/', (request, response, next) => {
 
   if (authorizationType !== 'Bearer') {
     response.status(401)
-    response.redirect('/login')
+    response.send(errorCodes.Err901)
     return
   }
   
@@ -25,7 +25,7 @@ router.use('/', (request, response, next) => {
 
   if (!tokenInSession || !token || tokenInSession !== token) {
     response.status(401)
-    response.redirect('/login')
+    response.send(errorCodes.Err901)
     return
   }
 

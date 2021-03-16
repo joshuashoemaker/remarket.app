@@ -8,7 +8,7 @@ const router = express.Router()
 const db = new Db()
 
 router.get('/', async (request, response) => {
-  const { userId } = request.headers
+  const { userId } = request.session!
 
   let responseToClient = {
     message: errorCodes.OK,
@@ -17,7 +17,7 @@ router.get('/', async (request, response) => {
 
   let itemDbFindResponse: MongoItemResponse[]
   try {
-    itemDbFindResponse = await db.find({}, 'Items')
+    itemDbFindResponse = await db.find({ userId }, 'Items')
   } catch (err) {
     responseToClient.message = errorCodes.Err20
     response.status(500)

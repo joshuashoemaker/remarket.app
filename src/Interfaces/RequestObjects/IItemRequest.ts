@@ -1,5 +1,6 @@
 interface IItemRequest {
   id: string,
+  userId?: string,
   shoppingSessionId?: string,
   label?: string,
   brand?: string,

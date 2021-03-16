@@ -3,6 +3,7 @@ import IItemRequest from '../../Interfaces/RequestObjects/IItemRequest'
 
 class DbItem implements Record {
   private readonly _id: string
+  private readonly userId?: string
   private readonly shoppingSessionId?: string
   private readonly label?: string
   private readonly brand?: string
@@ -16,6 +17,7 @@ class DbItem implements Record {
 
   constructor (item: IItemRequest) {
     this._id = item.id
+    this.userId = item.userId
     this.shoppingSessionId = item.shoppingSessionId
     this.label = item.label
     this.brand = item.brand
@@ -40,6 +42,7 @@ class DbItem implements Record {
   public get record () {
     return {
       _id: this._id,
+      userId: this.userId,
       shoppingSessionId: this.shoppingSessionId,
       label: this.label,
       brand: this.brand,

@@ -2,6 +2,7 @@ import IItemRequest from "./IItemRequest";
 
 interface IShoppingSessionRequest {
   id: string,
+  userId?: string,
   createdDate?: Date,
   subtotal: number,
   tax: number,

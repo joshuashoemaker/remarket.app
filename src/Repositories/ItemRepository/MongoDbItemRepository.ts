@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Item from '../../Entities/Item/Item'
+import User from '../../Entities/User/User'
 import makeItem from '../../Factories/Item/makeItem'
 import makeItemClothing from '../../Factories/Item/makeItemClothing'
 import ItemClothingConstructor from '../../Interfaces/Contructors/ItemClothingConstructor'
@@ -12,7 +13,15 @@ class MongoDbItemRepository implements IItemRepository {
   getAllItems = async (): Promise<IItem[] | null> => {
     let items: IItem[]
     try {
-      const itemsResponse = await axios.get('http://localhost:5005/api/protected/item')
+      const itemsResponse = await axios.get('/api/protected/item',
+      {
+        headers: {
+          Authorization: `Bearer ${User.token}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      })
+      
       if (itemsResponse.status !== 200) return null
 
       const itemsFromApi = itemsResponse.data.data as ApiItemResponse[]
@@ -34,10 +43,14 @@ class MongoDbItemRepository implements IItemRepository {
     let item: IItem | null = null
     try {
       const itemResponse = await axios.post(
-        `http://localhost:5005/api/protected/item/edit/${id}`,
+        `/api/protected/item/edit/${id}`,
         modifications,
-        { headers: {'Content-Type': 'application/json'} }
-      )
+        { headers: {
+            Authorization: `Bearer ${User.token}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        })
       if (itemResponse.status !== 201) return null
       const itemFromApi = itemResponse.data.data as ApiItemResponse
       if (itemFromApi.type === 'clothing') item = makeItemClothing(itemFromApi as ItemClothingConstructor)
@@ -52,7 +65,13 @@ class MongoDbItemRepository implements IItemRepository {
   findById = async (id: string): Promise<IItem | null> => {
     let item: IItem
     try {
-      const itemResponse = await axios.get(`http://localhost:5005/api/protected/item/${id}`)
+      const itemResponse = await axios.get(`/api/protected/item/${id}`, {
+        headers: {
+          Authorization: `Bearer ${User.token}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      })
       if (itemResponse.status !== 200) return null
 
       const itemFromApi = itemResponse.data.data as ApiItemResponse

@@ -9,11 +9,13 @@ import FinalizeShoppingSession from './ShoppingSession/FinalizeShoppingSession'
 import ShoppingSessionView from './ShoppingSession/ShoppingSessionView'
 import EditInventoryItem from './Inventory/EditInventoryItem'
 import SellInventoryItem from './Inventory/SellInventoryItem'
+import Login from './Login/Login'
 
 class App extends React.Component {
   render () {
     return <main className='App'>
       <Header />
+      <Route exact path='/login' component={() => <Login />} />
       <Route exact path='/' component={() => <Home />} />
       <Route exact path='/shoppingsession' component={() => <ShoppingSessionView />} />
       <Route exact path='/shoppingsession/add' component={() => <EditItemInShoppingSession />} />

@@ -8,7 +8,14 @@ module.exports = {
   devServer: {
     contentBase: './dist/webapp',
     historyApiFallback: true,
-    hot: true
+    hot: true,headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,HEAD,DELETE,OPTIONS',
+      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    },
+    proxy: {
+      '/api': 'http://localhost:5005',
+    },
   },
   module: {
     rules: [
