@@ -10,6 +10,7 @@ class Item implements IItem {
   public cost?: number
   public label?: string
   public descriptiveTags: string[]
+  public image?: File
   public imageUri?: string
   public isProcessed: boolean
   public isSold: boolean
@@ -24,6 +25,7 @@ class Item implements IItem {
     this.cost = props.cost
     this.label = props.label
     this.descriptiveTags = props.descriptiveTags || []
+    this.image = props.image
     this.imageUri = props.imageUri
     this.isProcessed = props.isProcessed || false
     this.isSold = props.isSold || false

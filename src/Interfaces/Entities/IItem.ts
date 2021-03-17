@@ -9,6 +9,7 @@ interface IItem {
   cost?: number,
   descriptiveTags?: string[],
   imageUri?: string,
+  image?: File,
   isProcessed: boolean,
   isSold: boolean,
   marketPlatform?: MarketPlatforms,

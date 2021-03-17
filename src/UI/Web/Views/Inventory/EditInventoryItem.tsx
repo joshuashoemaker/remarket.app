@@ -33,6 +33,7 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
   private controller = new InventoryController()
   private itemDetailOptions = new EditItemDetailOptions({/*  Empty Props */ })
   private item?: IItem
+  private uploadedImage?: File
 
   constructor(props: EditInventoryItemProps) {
     super(props)
@@ -94,6 +95,7 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
     if (!this?.fileInput?.current?.files?.[0]) return
 
     const file = this.fileInput.current.files[0]
+    this.uploadedImage = file
     const reader = new FileReader()
     reader.onload = (e) => {
       const src = e!.target!.result as string
@@ -148,6 +150,7 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
 
     let itemProps = {
       id: this.item!.id,
+      image: this.uploadedImage,
       imageUri: this.state.itemImageSrc,
       cost: this.state.cost || undefined,
       type: this.state.type === 'NA' ? undefined : this.state.type,

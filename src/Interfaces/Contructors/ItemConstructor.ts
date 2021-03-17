@@ -1,6 +1,7 @@
 import MarketPlatforms from "../../StaticDataStructures/MarketPlatforms";
 
 interface ItemConstructor {
+  [key: string]: any,
   id: string,
   shoppingSessionId?: string,
   label?: string,
@@ -8,6 +9,7 @@ interface ItemConstructor {
   type?: string,
   cost?: number,
   descriptiveTags?: string[],
+  image?: File,
   imageUri?: string,
   isProcessed?: boolean
   isSold?: boolean,

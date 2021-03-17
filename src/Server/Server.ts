@@ -1,5 +1,6 @@
 import express, { Express } from 'express'
 import session from 'express-session'
+import fileUpload from 'express-fileupload'
 import path from 'path'
 import cors from 'cors'
 import apiRouter from './Routes/apiRouter'
@@ -21,6 +22,7 @@ class Server {
 
   setupService = () => {
     this.service.use(express.json({limit: '10000kb'}))
+    this.service.use(fileUpload())
     this.service.use(cors())
     this.service.use(express.urlencoded({ extended: true }))
     this.service.use(express.static(path.join(process.cwd(), '/dist/webapp')))

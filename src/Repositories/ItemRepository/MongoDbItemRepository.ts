@@ -41,13 +41,19 @@ class MongoDbItemRepository implements IItemRepository {
 
   editById = async (id: string, modifications: ItemConstructor): Promise<IItem | null> => {
     let item: IItem | null = null
+
+    let formData = new FormData()
+    for (let key in modifications) {
+      formData.append(key, modifications[key])
+    }
+
     try {
       const itemResponse = await axios.post(
         `/api/protected/item/edit/${id}`,
-        modifications,
+        formData,
         { headers: {
             Authorization: `Bearer ${User.token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'multipart/form-data'
           },
           withCredentials: true
         })

@@ -1,11 +1,24 @@
-import express, { query } from 'express'
+import express from 'express'
 import ApiItemResponse from '../../../Interfaces/ResponseObjects/ApiItemResponse'
 import MongoItemResponse from '../../../Interfaces/ResponseObjects/MongoItemResponse'
 import Db from '../../Db'
 import errorCodes from '../../StaticDataStructures/errorCodes'
+import aws from 'aws-sdk'
+import SYS from '../../../SYS'
+import BucketStorage from '../../BucketStorage'
+import fileUpload from 'express-fileupload'
 
 const router = express.Router()
 const db = new Db()
+const s3 = new aws.S3({
+  endpoint: SYS.objectStorageEndpoint,
+  accessKeyId: SYS.objectStorageAccessId,
+  secretAccessKey: SYS.objectStorageSecretAccessKey,
+  region: 'default',
+  httpOptions: {
+    timeout: 0
+  }
+})
 
 router.get('/', async (request, response) => {
   const { userId } = request.session!
@@ -26,7 +39,7 @@ router.get('/', async (request, response) => {
   }
 
   const itemsResponse: ApiItemResponse[] = itemDbFindResponse.map(i => {
-    return {...i, ...{id: i._id}}
+    return { ...i, ...{ id: i._id } }
   })
 
   responseToClient.data = itemsResponse
@@ -55,7 +68,7 @@ router.post('/_find', async (request, response) => {
   }
 
   const itemsResponse: ApiItemResponse[] = itemDbFindResponse.map(i => {
-    return {...i, ...{id: i._id}}
+    return { ...i, ...{ id: i._id } }
   })
 
   responseToClient.data = itemsResponse
@@ -74,7 +87,7 @@ router.get('/:id', async (request, response) => {
 
   let itemDbFindResponse: MongoItemResponse
   try {
-    itemDbFindResponse = await db.findOne({_id: itemId}, 'Items')
+    itemDbFindResponse = await db.findOne({ _id: itemId }, 'Items')
   } catch (err) {
     responseToClient.message = errorCodes.Err20
     response.status(500)
@@ -82,8 +95,8 @@ router.get('/:id', async (request, response) => {
     return
   }
 
-  const itemResponse: ApiItemResponse = {...itemDbFindResponse, ...{id: itemDbFindResponse._id}}
-  
+  const itemResponse: ApiItemResponse = { ...itemDbFindResponse, ...{ id: itemDbFindResponse._id } }
+
   responseToClient.data = itemResponse
   response.status(200)
   response.send(responseToClient)
@@ -99,11 +112,34 @@ router.post('/edit/:id', async (request, response) => {
     data: {}
   }
 
+  let imageBuckeyKey: string = ''
+  if (request.files?.image) {
+    const itemImage = request.files!['image'] as fileUpload.UploadedFile
+
+    const uploadedSplitFileName = itemImage.name.split('.')
+    const extention = uploadedSplitFileName[uploadedSplitFileName.length - 1]
+    const fileName = `ItemPhoto-${item.id}.${extention}`
+
+    try {
+      imageBuckeyKey = await BucketStorage.upload({
+        bucketName: 'remarket',
+        fileName: fileName,
+        file: Buffer.from(itemImage.data)
+      })
+    } catch (err) {
+      console.log(err)
+      responseToClient.message = errorCodes.Err20
+      response.status(500)
+      response.send(responseToClient)
+      return
+    }
+  }
+
   let iteDbEditResponse: MongoItemResponse
   try {
-    let itemProps = {...item}
+    let itemProps = { ...item }
     delete itemProps._id
-    iteDbEditResponse = await db.findOneAndUpdate({_id: itemId}, 'Items', item)
+    iteDbEditResponse = await db.findOneAndUpdate({ _id: itemId }, 'Items', item)
   } catch (err) {
     responseToClient.message = errorCodes.Err20
     response.status(500)
@@ -111,9 +147,8 @@ router.post('/edit/:id', async (request, response) => {
     return
   }
 
-  
-  const itemResponse: ApiItemResponse = {...iteDbEditResponse, ...{id: iteDbEditResponse._id}}
-  
+  const itemResponse: ApiItemResponse = { ...iteDbEditResponse, ...{ id: iteDbEditResponse._id } }
+
   responseToClient.data = itemResponse
   response.status(201)
   response.send(responseToClient)
