@@ -21,7 +21,7 @@ class Server {
   }
 
   setupService = () => {
-    this.service.use(express.json({limit: '10000kb'}))
+    this.service.use(express.json({limit: '1000000kb'}))
     this.service.use(fileUpload())
     this.service.use(cors())
     this.service.use(express.urlencoded({ extended: true }))

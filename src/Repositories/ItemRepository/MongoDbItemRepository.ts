@@ -42,6 +42,7 @@ class MongoDbItemRepository implements IItemRepository {
   editById = async (id: string, modifications: ItemConstructor): Promise<IItem | null> => {
     let item: IItem | null = null
 
+    modifications.imageUri = ''
     let formData = new FormData()
     for (let key in modifications) {
       formData.append(key, modifications[key])

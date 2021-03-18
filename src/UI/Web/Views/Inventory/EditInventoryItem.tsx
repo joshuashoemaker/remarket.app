@@ -4,9 +4,9 @@ import InventoryController from '../../Controllers/InventoryController'
 import EditItemDetailOptions from './EditItemTypeDetail/EditItemTypeDetailOptions'
 import IItem from '../../../../Interfaces/Entities/IItem'
 
-import { AppBar, Backdrop, Box, Button, Chip, CircularProgress, IconButton, MenuItem, Paper, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Toolbar, Typography } from '@material-ui/core'
+import { Backdrop, Box, Chip, CircularProgress, IconButton, MenuItem, Paper, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Toolbar, Typography } from '@material-ui/core'
 import EditInventoryItemStepper from './EditInventoryItemStepper'
-import { PhotoCamera, Cancel, Check } from '@material-ui/icons'
+import { PhotoCamera } from '@material-ui/icons'
 import './styles.css'
 import MarketPlatforms from '../../../../StaticDataStructures/MarketPlatforms'
 

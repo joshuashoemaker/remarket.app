@@ -8,6 +8,7 @@ interface IItemRequest {
   cost?: number,
   descriptiveTags?: string[],
   imageUri?: string,
+  image?: File,
   createdDate?: Date,
   isProccessed?: boolean
   isSold?: boolean,

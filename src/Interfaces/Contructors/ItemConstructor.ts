@@ -11,6 +11,7 @@ interface ItemConstructor {
   descriptiveTags?: string[],
   image?: File,
   imageUri?: string,
+  imageKey?: string,
   isProcessed?: boolean
   isSold?: boolean,
   marketPlatform?: MarketPlatforms,

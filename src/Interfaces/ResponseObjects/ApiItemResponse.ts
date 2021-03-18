@@ -7,6 +7,7 @@ interface ApiItemResponse {
   cost?: number,
   descriptiveTags?: string[],
   imageUri?: string,
+  imageKey?: string,
   createdDate?: Date,
   isProcessed: boolean,
   isSold: boolean,

@@ -3,22 +3,11 @@ import ApiItemResponse from '../../../Interfaces/ResponseObjects/ApiItemResponse
 import MongoItemResponse from '../../../Interfaces/ResponseObjects/MongoItemResponse'
 import Db from '../../Db'
 import errorCodes from '../../StaticDataStructures/errorCodes'
-import aws from 'aws-sdk'
-import SYS from '../../../SYS'
 import BucketStorage from '../../BucketStorage'
 import fileUpload from 'express-fileupload'
 
 const router = express.Router()
 const db = new Db()
-const s3 = new aws.S3({
-  endpoint: SYS.objectStorageEndpoint,
-  accessKeyId: SYS.objectStorageAccessId,
-  secretAccessKey: SYS.objectStorageSecretAccessKey,
-  region: 'default',
-  httpOptions: {
-    timeout: 0
-  }
-})
 
 router.get('/', async (request, response) => {
   const { userId } = request.session!
@@ -39,7 +28,15 @@ router.get('/', async (request, response) => {
   }
 
   const itemsResponse: ApiItemResponse[] = itemDbFindResponse.map(i => {
-    return { ...i, ...{ id: i._id } }
+    let presignedItemImageUrl: string = ''
+    if (i.imageKey) {
+      presignedItemImageUrl = BucketStorage.getPresignedUrl({
+        bucketName: 'remarket',
+        key: i.imageKey,
+        expiresInSeconds: 600
+      })
+    }
+    return { ...i, ...{ id: i._id, imageUri: presignedItemImageUrl } }
   })
 
   responseToClient.data = itemsResponse
@@ -68,7 +65,15 @@ router.post('/_find', async (request, response) => {
   }
 
   const itemsResponse: ApiItemResponse[] = itemDbFindResponse.map(i => {
-    return { ...i, ...{ id: i._id } }
+    let presignedItemImageUrl: string = ''
+    if (i.imageKey) {
+      presignedItemImageUrl = BucketStorage.getPresignedUrl({
+        bucketName: 'remarket',
+        key: i.imageKey,
+        expiresInSeconds: 600
+      })
+    }
+    return { ...i, ...{ id: i._id, imageUri: presignedItemImageUrl } }
   })
 
   responseToClient.data = itemsResponse
@@ -95,7 +100,21 @@ router.get('/:id', async (request, response) => {
     return
   }
 
-  const itemResponse: ApiItemResponse = { ...itemDbFindResponse, ...{ id: itemDbFindResponse._id } }
+  
+  let presignedItemImageUrl: string = ''
+  if (itemDbFindResponse.imageKey) {
+    presignedItemImageUrl = BucketStorage.getPresignedUrl({
+      bucketName: 'remarket',
+      key: itemDbFindResponse.imageKey,
+      expiresInSeconds: 600
+    })
+  }
+  // return { ...i, ...{ id: i._id, imageUri: presignedItemImageUrl } }
+
+  const itemResponse: ApiItemResponse = {
+    ...itemDbFindResponse,
+    ...{ id: itemDbFindResponse._id, imageUri: presignedItemImageUrl }
+  }
 
   responseToClient.data = itemResponse
   response.status(200)
@@ -112,7 +131,7 @@ router.post('/edit/:id', async (request, response) => {
     data: {}
   }
 
-  let imageBuckeyKey: string = ''
+  let imageBucketKey: string = ''
   if (request.files?.image) {
     const itemImage = request.files!['image'] as fileUpload.UploadedFile
 
@@ -121,7 +140,7 @@ router.post('/edit/:id', async (request, response) => {
     const fileName = `ItemPhoto-${item.id}.${extention}`
 
     try {
-      imageBuckeyKey = await BucketStorage.upload({
+      imageBucketKey = await BucketStorage.upload({
         bucketName: 'remarket',
         fileName: fileName,
         file: Buffer.from(itemImage.data)
@@ -135,11 +154,20 @@ router.post('/edit/:id', async (request, response) => {
     }
   }
 
-  let iteDbEditResponse: MongoItemResponse
+  let itemDbEditResponse: MongoItemResponse
   try {
-    let itemProps = { ...item }
+    let itemProps = { ...item, ...{ imageKey: imageBucketKey } }
+
     delete itemProps._id
-    iteDbEditResponse = await db.findOneAndUpdate({ _id: itemId }, 'Items', item)
+
+    for (let key in itemProps) {
+      if (itemProps[key] === 'undefined' || itemProps[key] === 'null') itemProps[key] = undefined
+      else if (!isNaN(itemProps[key])) itemProps[key] = parseFloat(itemProps[key])
+      else if (itemProps[key] === 'true') itemProps[key] = true
+      else if (itemProps[key] === 'false') itemProps[key] = false
+    }
+
+    itemDbEditResponse = await db.findOneAndUpdate({ _id: itemId }, 'Items', itemProps)
   } catch (err) {
     responseToClient.message = errorCodes.Err20
     response.status(500)
@@ -147,7 +175,7 @@ router.post('/edit/:id', async (request, response) => {
     return
   }
 
-  const itemResponse: ApiItemResponse = { ...iteDbEditResponse, ...{ id: iteDbEditResponse._id } }
+  const itemResponse: ApiItemResponse = { ...itemDbEditResponse, ...{ id: itemDbEditResponse._id } }
 
   responseToClient.data = itemResponse
   response.status(201)
