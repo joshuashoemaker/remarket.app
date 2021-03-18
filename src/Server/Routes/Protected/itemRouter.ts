@@ -5,6 +5,7 @@ import Db from '../../Db'
 import errorCodes from '../../StaticDataStructures/errorCodes'
 import BucketStorage from '../../BucketStorage'
 import fileUpload from 'express-fileupload'
+import BucketKeyPrefixes from '../../../StaticDataStructures/BucketKeyPrefixes'
 
 const router = express.Router()
 const db = new Db()
@@ -109,7 +110,6 @@ router.get('/:id', async (request, response) => {
       expiresInSeconds: 600
     })
   }
-  // return { ...i, ...{ id: i._id, imageUri: presignedItemImageUrl } }
 
   const itemResponse: ApiItemResponse = {
     ...itemDbFindResponse,
@@ -131,42 +131,11 @@ router.post('/edit/:id', async (request, response) => {
     data: {}
   }
 
-  let imageBucketKey: string = ''
-  if (request.files?.image) {
-    const itemImage = request.files!['image'] as fileUpload.UploadedFile
-
-    const uploadedSplitFileName = itemImage.name.split('.')
-    const extention = uploadedSplitFileName[uploadedSplitFileName.length - 1]
-    const fileName = `ItemPhoto-${item.id}.${extention}`
-
-    try {
-      imageBucketKey = await BucketStorage.upload({
-        bucketName: 'remarket',
-        fileName: fileName,
-        file: Buffer.from(itemImage.data)
-      })
-    } catch (err) {
-      console.log(err)
-      responseToClient.message = errorCodes.Err20
-      response.status(500)
-      response.send(responseToClient)
-      return
-    }
-  }
-
   let itemDbEditResponse: MongoItemResponse
   try {
-    let itemProps = { ...item, ...{ imageKey: imageBucketKey } }
+    let itemProps = { ...item }
 
     delete itemProps._id
-
-    for (let key in itemProps) {
-      if (itemProps[key] === 'undefined' || itemProps[key] === 'null') itemProps[key] = undefined
-      else if (!isNaN(itemProps[key])) itemProps[key] = parseFloat(itemProps[key])
-      else if (itemProps[key] === 'true') itemProps[key] = true
-      else if (itemProps[key] === 'false') itemProps[key] = false
-    }
-
     itemDbEditResponse = await db.findOneAndUpdate({ _id: itemId }, 'Items', itemProps)
   } catch (err) {
     responseToClient.message = errorCodes.Err20
@@ -180,6 +149,48 @@ router.post('/edit/:id', async (request, response) => {
   responseToClient.data = itemResponse
   response.status(201)
   response.send(responseToClient)
+})
+
+router.post('/addImage/:id', async (request, response) => {
+  const { userId } = request.headers
+  const itemId = request.params.id
+
+  let responseToClient = {
+    message: errorCodes.OK,
+    data: {}
+  }
+
+  let imageKey: string = ''
+  if (request.files?.image) {
+    const itemImage = request.files!['image'] as fileUpload.UploadedFile
+
+    const uploadedSplitFileName = itemImage.name.split('.')
+    const extention = uploadedSplitFileName[uploadedSplitFileName.length - 1]
+    const fileName = BucketStorage.createBucketKey({
+      entityId: itemId,
+      prefix: BucketKeyPrefixes.ItemPhoto,
+      extention: extention
+    })
+
+    try {
+      imageKey = await BucketStorage.upload({
+        bucketName: 'remarket',
+        fileName: fileName,
+        file: Buffer.from(itemImage.data)
+      })
+    } catch (err) {
+      console.log(err)
+      responseToClient.message = errorCodes.Err20
+      response.status(500)
+      response.send(responseToClient)
+      return
+    }
+  }
+
+  responseToClient.data = { imageKey }
+  response.status(201)
+  response.send(responseToClient)
+
 })
 
 export default router

@@ -1,4 +1,5 @@
 import aws from 'aws-sdk'
+import BucketKeyPrefixes from '../StaticDataStructures/BucketKeyPrefixes'
 import SYS from '../SYS'
 
 class BucketStorage {
@@ -34,6 +35,10 @@ class BucketStorage {
       Expires: expriesInMiliseconds
     })
     return presignedUrlResponse
+  }
+
+  public static createBucketKey (props: { entityId: string, prefix: BucketKeyPrefixes, extention: string }) {
+    return `${props.prefix}-${props.entityId}.${props.extention}`
   }
 }
 

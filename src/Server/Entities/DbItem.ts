@@ -11,6 +11,7 @@ class DbItem implements Record {
   private readonly cost?: number
   private readonly descriptiveTags?: string[]
   private readonly imageUri?: string
+  private readonly imageKey?: string
   private _createdDate?: Date
   private isProcessed: boolean
   private isSold: boolean
@@ -25,6 +26,7 @@ class DbItem implements Record {
     this.cost = item.cost
     this.descriptiveTags = item.descriptiveTags
     this.imageUri = item.imageUri
+    this.imageKey = item.imageKey
     this._createdDate = item.createdDate
     this.isProcessed = item.isProccessed || false
     this.isSold = item.isSold || false
@@ -50,6 +52,7 @@ class DbItem implements Record {
       cost: this.cost,
       descriptiveTags: this.descriptiveTags,
       imageUri: this.imageUri,
+      imageKey: this.imageKey,
       createdDate: this.createdDate,
       modifiedDate: this.modifiedDate,
       isProcessed: this.isProcessed,

@@ -36,12 +36,10 @@ class Login extends React.Component<{}, LoginState> {
   onSubmit = async () => {
     const { username, password } = this.state
     const loginResponse = await this.controller.onSubmit(username, password)
-    console.log(loginResponse)
 
     if (loginResponse.status !== 200) return
 
     const token = loginResponse.data?.data?.token
-    console.log(token)
     cookie.set('token', token)
     history.push('/')
   }

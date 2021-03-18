@@ -29,6 +29,7 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
   private controller: AddItemToShoppingSessionController
   private itemDetailOptions: AddItemDetailOptions
   private item: IItem | undefined
+  private uploadedImage?: File
 
   constructor (props: AddItemProps) {
     super(props)
@@ -67,6 +68,7 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
     if (!this?.fileInput?.current?.files?.[0]) return
 
     const file = this.fileInput.current.files[0]
+    this.uploadedImage = file
     const reader = new FileReader()
     reader.onload = (e) => {
       const src = e!.target!.result as string
@@ -112,6 +114,7 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
   onSubmit = () => {
     let itemProps = {
       id: this.controller.itemId,
+      image: this.uploadedImage,
       imageUri: this.state.itemImageSrc,
       cost: this.state.cost || undefined,
       type: this.state.type === 'NA' ? undefined : this.state.type,

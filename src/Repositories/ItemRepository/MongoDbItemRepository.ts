@@ -43,18 +43,14 @@ class MongoDbItemRepository implements IItemRepository {
     let item: IItem | null = null
 
     modifications.imageUri = ''
-    let formData = new FormData()
-    for (let key in modifications) {
-      formData.append(key, modifications[key])
-    }
 
     try {
       const itemResponse = await axios.post(
         `/api/protected/item/edit/${id}`,
-        formData,
+        modifications,
         { headers: {
             Authorization: `Bearer ${User.token}`,
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'application/json'
           },
           withCredentials: true
         })
