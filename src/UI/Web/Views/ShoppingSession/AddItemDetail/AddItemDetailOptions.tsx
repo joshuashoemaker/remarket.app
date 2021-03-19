@@ -1,5 +1,5 @@
 import * as React from 'react'
-import ItemClothingConstructor from '../../../../../Interfaces/Contructors/ItemClothingConstructor'
+import IItemClothing from '../../../../../Interfaces/Entities/IItemClothing'
 import AddClothingItemDetailToShoppingSession from './AddClothingItemDetailToShoppingSession'
 
 class AddItemDetailOptions extends React.Component {
@@ -9,7 +9,7 @@ class AddItemDetailOptions extends React.Component {
     if (detailType === 'clothing') return this.clothingDetailForm.current?.details
   }
   
-  getElementByName (name: string, item?: ItemClothingConstructor) {
+  getElementByName (name: string, item?: IItemClothing) {
     if (name === 'clothing') return <AddClothingItemDetailToShoppingSession ref={this.clothingDetailForm} item={item} />
   }
 }

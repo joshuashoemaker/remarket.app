@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
 import ShoppingSession from '../../../Entities/ShoppingSession/ShoppingSession'
-import ItemConstructor from '../../../Interfaces/Contructors/ItemConstructor'
 import IItem from '../../../Interfaces/Entities/IItem'
 
 class AddItemToShoppingSessionController {
@@ -8,16 +7,16 @@ class AddItemToShoppingSessionController {
   public readonly itemId: string
   private shoppingSession: ShoppingSession = new ShoppingSession()
 
-  constructor(props: { itemId?: string,  makeItem(itemProps: ItemConstructor): IItem }) {
+  constructor(props: { itemId?: string,  makeItem(itemProps: IItem): IItem }) {
     this._makeItem = props.makeItem
     this.itemId = props.itemId || uuidv4()
   }
 
-  addItem = (itemProps: ItemConstructor) => {
+  addItem = (itemProps: IItem) => {
     this.shoppingSession.itemRepository.addItem(this._makeItem(itemProps))
   }
 
-  editItem = (item: ItemConstructor) => {
+  editItem = (item: IItem) => {
     const modifiedItem = this.shoppingSession.itemRepository.editById(item.id, item)
     return modifiedItem
   }

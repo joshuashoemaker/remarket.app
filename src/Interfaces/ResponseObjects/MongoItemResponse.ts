@@ -1,19 +1,7 @@
-import ItemTypes from "../../StaticDataStructures/ItemTypes";
+import IItemRequest from "../RequestObjects/IItemRequest";
 
-interface MongoItemResponse {
-  _id: string,
-  shoppingSessionId?: string,
-  label?: string,
-  brand?: string,
-  type?: ItemTypes,
-  cost?: number,
-  descriptiveTags?: string[],
-  imageUri?: string,
-  imageKey?: string,
-  createdDate?: Date
-  isProcessed: boolean,
-  isSold: boolean,
-  sellPrice?: number
+interface MongoItemResponse extends IItemRequest {
+  _id: string
 }
 
 export default MongoItemResponse

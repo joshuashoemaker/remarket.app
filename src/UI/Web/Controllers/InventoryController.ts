@@ -1,6 +1,6 @@
 import axios from "axios";
 import User from "../../../Entities/User/User";
-import ItemConstructor from "../../../Interfaces/Contructors/ItemConstructor";
+import IItem from "../../../Interfaces/Entities/IItem";
 import MongoDbItemRepository from "../../../Repositories/ItemRepository/MongoDbItemRepository";
 
 class InventoryController {
@@ -14,7 +14,7 @@ class InventoryController {
     return await this.itemsRepository.findById(id)
   }
 
-  editItem = async (item: ItemConstructor) => {
+  editItem = async (item: IItem) => {
     let imageKey: string = ''
 
     if (item.image) {

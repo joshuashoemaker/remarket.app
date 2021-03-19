@@ -1,5 +1,6 @@
 import Record from '../Interfaces/Database/Record'
 import IItemRequest from '../../Interfaces/RequestObjects/IItemRequest'
+import ItemTypes from '../../StaticDataStructures/ItemTypes'
 
 class DbItem implements Record {
   private readonly _id: string
@@ -7,7 +8,7 @@ class DbItem implements Record {
   private readonly shoppingSessionId?: string
   private readonly label?: string
   private readonly brand?: string
-  private readonly type?: string
+  private readonly type?: ItemTypes
   private readonly cost?: number
   private readonly descriptiveTags?: string[]
   private readonly imageUri?: string
@@ -28,7 +29,7 @@ class DbItem implements Record {
     this.imageUri = item.imageUri
     this.imageKey = item.imageKey
     this._createdDate = item.createdDate
-    this.isProcessed = item.isProccessed || false
+    this.isProcessed = item.isProcessed || false
     this.isSold = item.isSold || false
   }
 

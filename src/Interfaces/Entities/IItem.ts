@@ -11,13 +11,12 @@ interface IItem {
   descriptiveTags?: string[],
   imageUri?: string,
   image?: File,
-  isProcessed: boolean,
-  isSold: boolean,
+  imageKey?: string,
+  isProcessed?: boolean,
+  isSold?: boolean,
   marketPlatform?: MarketPlatforms,
   listedPrice?: number,
-  sellPrice?: number,
-  addDescriptiveTag(tag: string): void,
-  removeDescriptiveTag(tag: string): void
+  sellPrice?: number
 }
 
 export default IItem

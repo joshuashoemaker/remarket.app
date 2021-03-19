@@ -1,10 +1,10 @@
-import ApiItemResponse from "./ApiItemResponse";
+import IItem from "../Entities/IItem";
 
 interface ApiShoppingSessionResponse {
   id: string,
-  createdDate: string,
-  modifiedDate: string,
-  items: ApiItemResponse[]
+  createdDate: Date,
+  modifiedDate: Date,
+  items: IItem[]
 }
 
 export default ApiShoppingSessionResponse

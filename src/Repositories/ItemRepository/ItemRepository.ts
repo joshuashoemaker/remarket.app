@@ -1,5 +1,4 @@
 import IItem from '../../Interfaces/Entities/IItem'
-import ItemConstructor from '../../Interfaces/Contructors/ItemConstructor'
 import IItemRepository from '../../Interfaces/Repositories/IItemRepository'
 
 class ItemRepository implements IItemRepository {
@@ -12,7 +11,7 @@ class ItemRepository implements IItemRepository {
 
   addItem = (item: IItem) => this.items.push(item)
 
-  editById = (id: string, modifications: ItemConstructor) => {
+  editById = (id: string, modifications: IItem) => {
     let item = this.findById(id)
     item = Object.assign(item, modifications)
     return item

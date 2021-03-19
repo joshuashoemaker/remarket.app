@@ -1,5 +1,4 @@
 import IItem from '../../Interfaces/Entities/IItem'
-import ItemConstructor from '../../Interfaces/Contructors/ItemConstructor'
 import MarketPlatforms from '../../StaticDataStructures/MarketPlatforms'
 import ItemTypes from '../../StaticDataStructures/ItemTypes'
 
@@ -19,7 +18,7 @@ class Item implements IItem {
   public listedPrice?: number
   public sellPrice?: number
 
-  constructor(props: ItemConstructor) {
+  constructor(props: IItem) {
     this.id = props.id
     this.brand = props.brand
     this.type = props.type

@@ -1,11 +1,11 @@
 import express from 'express'
-import ApiItemResponse from '../../../Interfaces/ResponseObjects/ApiItemResponse'
 import MongoItemResponse from '../../../Interfaces/ResponseObjects/MongoItemResponse'
 import Db from '../../Db'
 import errorCodes from '../../../StaticDataStructures/errorCodes'
 import BucketStorage from '../../BucketStorage'
 import fileUpload from 'express-fileupload'
 import BucketKeyPrefixes from '../../../StaticDataStructures/BucketKeyPrefixes'
+import IItem from '../../../Interfaces/Entities/IItem'
 
 const router = express.Router()
 const db = new Db()
@@ -28,7 +28,7 @@ router.get('/', async (request, response) => {
     return
   }
 
-  const itemsResponse: ApiItemResponse[] = itemDbFindResponse.map(i => {
+  const itemsResponse: IItem[] = itemDbFindResponse.map(i => {
     let presignedItemImageUrl: string = ''
     if (i.imageKey) {
       presignedItemImageUrl = BucketStorage.getPresignedUrl({
@@ -65,7 +65,7 @@ router.post('/_find', async (request, response) => {
     return
   }
 
-  const itemsResponse: ApiItemResponse[] = itemDbFindResponse.map(i => {
+  const itemsResponse: IItem[] = itemDbFindResponse.map(i => {
     let presignedItemImageUrl: string = ''
     if (i.imageKey) {
       presignedItemImageUrl = BucketStorage.getPresignedUrl({
@@ -111,7 +111,7 @@ router.get('/:id', async (request, response) => {
     })
   }
 
-  const itemResponse: ApiItemResponse = {
+  const itemResponse: IItem = {
     ...itemDbFindResponse,
     ...{ id: itemDbFindResponse._id, imageUri: presignedItemImageUrl }
   }
@@ -144,7 +144,7 @@ router.post('/edit/:id', async (request, response) => {
     return
   }
 
-  const itemResponse: ApiItemResponse = { ...itemDbEditResponse, ...{ id: itemDbEditResponse._id } }
+  const itemResponse: IItem = { ...itemDbEditResponse, ...{ id: itemDbEditResponse._id } }
 
   responseToClient.data = itemResponse
   response.status(201)

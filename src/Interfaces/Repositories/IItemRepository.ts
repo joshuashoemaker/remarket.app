@@ -1,11 +1,10 @@
-import ItemConstructor from '../Contructors/ItemConstructor'
 import IItem from '../Entities/IItem'
 
 interface IItemRepository {
   items?: IItem[],
   getAllItems?(): Promise<IItem[] | null>,
   addItem(item: IItem): void,
-  editById(id: string, modifications: ItemConstructor): Promise<IItem | null> | IItem,
+  editById(id: string, modifications: IItem): Promise<IItem | null> | IItem,
   findById(id: string): IItem | Promise<IItem | null> | undefined,
   findByBrand(brand: string): IItem[],
   findByLabel(label: string): IItem[],

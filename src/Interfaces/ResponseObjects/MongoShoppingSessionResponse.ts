@@ -2,8 +2,8 @@ import MongoItemResponse from "./MongoItemResponse";
 
 interface MongoShoppingSessionResponse {
   _id: string,
-  createdDate: string,
-  modifiedDate: string,
+  createdDate: Date,
+  modifiedDate: Date,
   items: MongoItemResponse[]
 }
 
