@@ -1,5 +1,5 @@
 import express from 'express'
-import errorCodes from '../../StaticDataStructures/errorCodes'
+import errorCodes from '../../../StaticDataStructures/errorCodes'
 
 const router = express.Router()
 

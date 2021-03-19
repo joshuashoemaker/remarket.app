@@ -5,6 +5,7 @@ import makeItemClothing from '../../../../Factories/Item/makeItemClothing'
 import AddItemToShoppingSessionController from '../../Controllers/AddItemToShoppingSessionController'
 import AddItemDetailOptions from './AddItemDetail/AddItemDetailOptions'
 import IItem from '../../../../Interfaces/Entities/IItem'
+import ItemTypes from '../../../../StaticDataStructures/ItemTypes'
 
 import { AppBar, Box, Button, Chip, IconButton, MenuItem, TextField, Toolbar } from '@material-ui/core'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
@@ -16,7 +17,7 @@ interface AddItemProps { }
 
 interface AddItemState {
   cost: number | '',
-  type: string,
+  type: ItemTypes,
   brand: string,
   label: string,
   tagFieldValue: string,
@@ -43,7 +44,7 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
     this.state = {
       itemImageSrc: this.item?.imageUri || 'https://designshack.net/wp-content/uploads/placeholder-image.png',
       cost: this.item?.cost || '',
-      type: this.item?.type || 'NA',
+      type: this.item?.type as ItemTypes || ItemTypes.NA,
       brand: this.item?.brand || '',
       label: this.item?.label || '',
       tagFieldValue: '',
@@ -106,8 +107,8 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
   }
 
   onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const type = e.target.value
-    if (type === 'clothing') this.controller.makeItemFactory = makeItemClothing
+    const type = e.target.value as ItemTypes
+    if (type === ItemTypes.Clothing) this.controller.makeItemFactory = makeItemClothing
     this.setState({ type })
   }
 
@@ -167,9 +168,10 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
         
         <TextField value={this.state.brand} onChange={this.onBrandChange} id='brandField' className='formInput' label='Brand' variant='outlined' fullWidth />
         
-        <TextField value={this.state.type} onChange={this.onTypeChange} id='typeField' className='formInput' label='Type' variant='outlined' select fullWidth defaultValue='NA'>
-          <MenuItem value='NA'><em>None</em></MenuItem>
-          <MenuItem value='clothing'>Clothing</MenuItem>
+        <TextField value={this.state.type} onChange={this.onTypeChange} id='typeField' className='formInput' label='Type' variant='outlined' select fullWidth defaultValue={ItemTypes.NA}>
+          <MenuItem value={ItemTypes.NA}><em>None</em></MenuItem>
+          <MenuItem value={ItemTypes.Clothing}>Clothing</MenuItem>
+          <MenuItem value={ItemTypes.Other}>Other</MenuItem>
         </TextField>
       
         { this.renderAddItemDetail() }

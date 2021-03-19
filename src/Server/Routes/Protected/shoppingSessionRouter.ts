@@ -1,6 +1,6 @@
 import express from 'express'
 import Db from '../../Db'
-import errorCodes from '../../StaticDataStructures/errorCodes'
+import errorCodes from '../../../StaticDataStructures/errorCodes'
 import IShoppingSessionRequest from '../../../Interfaces/RequestObjects/IShoppingSessionRequest'
 import DbItem from '../../Entities/DbItem'
 import DbShoppingSession from '../../Entities/DbShoppingSession'

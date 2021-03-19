@@ -1,12 +1,13 @@
 import IItem from '../../Interfaces/Entities/IItem'
 import ItemConstructor from '../../Interfaces/Contructors/ItemConstructor'
 import MarketPlatforms from '../../StaticDataStructures/MarketPlatforms'
+import ItemTypes from '../../StaticDataStructures/ItemTypes'
 
 class Item implements IItem {
   readonly id: string
   readonly shoppingSessionId?: string
   public brand?: string
-  public type?: string
+  public type?: ItemTypes
   public cost?: number
   public label?: string
   public descriptiveTags: string[]

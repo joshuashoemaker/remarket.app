@@ -3,6 +3,7 @@ import history from '../history'
 import InventoryController from '../../Controllers/InventoryController'
 import EditItemDetailOptions from './EditItemTypeDetail/EditItemTypeDetailOptions'
 import IItem from '../../../../Interfaces/Entities/IItem'
+import ItemTypes from '../../../../StaticDataStructures/ItemTypes'
 
 import { Backdrop, Box, Chip, CircularProgress, IconButton, MenuItem, Paper, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Toolbar, Typography } from '@material-ui/core'
 import EditInventoryItemStepper from './EditInventoryItemStepper'
@@ -14,7 +15,7 @@ interface EditInventoryItemProps { }
 
 interface EditInventoryItemState {
   cost: number | '',
-  type: string,
+  type: ItemTypes,
   brand: string,
   label: string,
   tagFieldValue: string,
@@ -41,7 +42,7 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
     this.state = {
       itemImageSrc: 'https://designshack.net/wp-content/uploads/placeholder-image.png',
       cost: '',
-      type: 'NA',
+      type: ItemTypes.NA,
       brand: '',
       label: '',
       tagFieldValue: '',
@@ -63,7 +64,7 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
     this.setState({
       itemImageSrc: this.item?.imageUri || 'https://designshack.net/wp-content/uploads/placeholder-image.png',
       cost: this.item?.cost || '',
-      type: this.item?.type || 'NA',
+      type: this.item?.type as ItemTypes || ItemTypes.NA,
       brand: this.item?.brand || '',
       label: this.item?.label || '',
       marketPlatform: this.item?.marketPlatform || MarketPlatforms.none,
@@ -141,7 +142,7 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
   }
 
   onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const type = e.target.value
+    const type = e.target.value as ItemTypes
     this.setState({ type })
   }
 
@@ -153,7 +154,7 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
       image: this.uploadedImage,
       imageUri: this.state.itemImageSrc,
       cost: this.state.cost || undefined,
-      type: this.state.type === 'NA' ? undefined : this.state.type,
+      type: this.state.type === ItemTypes.NA ? undefined : this.state.type,
       brand: this.state.brand,
       label: this.state.label,
       descriptiveTags: this.state.descriptiveTags,
@@ -207,9 +208,10 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
 
         <TextField value={this.state.brand} onChange={this.onBrandChange} id='brandField' className='formInput' label='Brand' variant='outlined' fullWidth />
 
-        <TextField value={this.state.type} onChange={this.onTypeChange} id='typeField' className='formInput' label='Type' variant='outlined' select fullWidth defaultValue='NA'>
-          <MenuItem value='NA'><em>None</em></MenuItem>
-          <MenuItem value='clothing'>Clothing</MenuItem>
+        <TextField value={this.state.type} onChange={this.onTypeChange} id='typeField' className='formInput' label='Type' variant='outlined' select fullWidth defaultValue={ItemTypes.NA}>
+          <MenuItem value={ItemTypes.NA}><em>None</em></MenuItem>
+          <MenuItem value={ItemTypes.Clothing}>Clothing</MenuItem>
+          <MenuItem value={ItemTypes.Other}>Other</MenuItem>
         </TextField>
 
         {this.renderAddItemDetail()}

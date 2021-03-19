@@ -1,3 +1,4 @@
+import ItemTypes from "../../StaticDataStructures/ItemTypes";
 import MarketPlatforms from "../../StaticDataStructures/MarketPlatforms";
 
 interface ItemConstructor {
@@ -6,7 +7,7 @@ interface ItemConstructor {
   shoppingSessionId?: string,
   label?: string,
   brand?: string,
-  type?: string,
+  type?: ItemTypes,
   cost?: number,
   descriptiveTags?: string[],
   image?: File,

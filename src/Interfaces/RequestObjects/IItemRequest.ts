@@ -1,10 +1,12 @@
+import ItemTypes from "../../StaticDataStructures/ItemTypes";
+
 interface IItemRequest {
   id: string,
   userId?: string,
   shoppingSessionId?: string,
   label?: string,
   brand?: string,
-  type?: string,
+  type?: ItemTypes,
   cost?: number,
   descriptiveTags?: string[],
   imageUri?: string,

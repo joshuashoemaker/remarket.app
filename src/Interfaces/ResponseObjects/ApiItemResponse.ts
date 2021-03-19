@@ -1,9 +1,11 @@
+import ItemTypes from "../../StaticDataStructures/ItemTypes";
+
 interface ApiItemResponse {
   id: string,
   shoppingSessionId?: string,
   label?: string,
   brand?: string,
-  type?: string,
+  type?: ItemTypes,
   cost?: number,
   descriptiveTags?: string[],
   imageUri?: string,
