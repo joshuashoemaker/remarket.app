@@ -41,7 +41,6 @@ class AddClothingItemDetailToShoppingSession extends React.Component<AddItemProp
 
   onTimeOfProductionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ timeOfProduction: e.target.value })
-    console.log(e.target.value)
   }
 
   get details () {

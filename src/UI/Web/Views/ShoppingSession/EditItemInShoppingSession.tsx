@@ -1,7 +1,6 @@
 import * as React from 'react'
 import history from '../history'
 import makeItem from '../../../../Factories/Item/makeItem'
-import makeItemClothing from '../../../../Factories/Item/makeItemClothing'
 import AddItemToShoppingSessionController from '../../Controllers/AddItemToShoppingSessionController'
 import AddItemDetailOptions from './AddItemDetail/AddItemDetailOptions'
 import IItem from '../../../../Interfaces/Entities/IItem'
@@ -37,7 +36,7 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
 
     const itemIdFromUrl: string | undefined = this.getItemIdFromUrl()
 
-    this.controller = new AddItemToShoppingSessionController({ itemId: itemIdFromUrl, makeItem: makeItem })
+    this.controller = new AddItemToShoppingSessionController({ itemId: itemIdFromUrl })
     this.itemDetailOptions = new AddItemDetailOptions({/* empty props */})
     this.item = this.controller.currentItem
 
@@ -108,7 +107,6 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
 
   onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const type = e.target.value as ItemTypes
-    if (type === ItemTypes.Clothing) this.controller.makeItemFactory = makeItemClothing
     this.setState({ type })
   }
 

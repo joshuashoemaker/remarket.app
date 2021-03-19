@@ -1,19 +1,24 @@
 import { v4 as uuidv4 } from 'uuid'
 import ShoppingSession from '../../../Entities/ShoppingSession/ShoppingSession'
+import makeItem from '../../../Factories/Item/makeItem'
+import makeItemClothing from '../../../Factories/Item/makeItemClothing'
 import IItem from '../../../Interfaces/Entities/IItem'
+import ItemTypes from '../../../StaticDataStructures/ItemTypes'
 
 class AddItemToShoppingSessionController {
-  private _makeItem: Function
   public readonly itemId: string
   private shoppingSession: ShoppingSession = new ShoppingSession()
 
-  constructor(props: { itemId?: string,  makeItem(itemProps: IItem): IItem }) {
-    this._makeItem = props.makeItem
+  constructor(props: { itemId?: string }) {
     this.itemId = props.itemId || uuidv4()
   }
 
   addItem = (itemProps: IItem) => {
-    this.shoppingSession.itemRepository.addItem(this._makeItem(itemProps))
+    let item: IItem | null = null
+    if (itemProps.type === ItemTypes.Clothing) item = makeItemClothing(itemProps)
+    else item = makeItem(itemProps)
+
+    this.shoppingSession.itemRepository.addItem(item)
   }
 
   editItem = (item: IItem) => {
@@ -23,10 +28,6 @@ class AddItemToShoppingSessionController {
 
   get currentItem (): IItem | undefined {
     return this.shoppingSession.itemRepository.findById(this.itemId) as IItem
-  }
-
-  set makeItemFactory (factory: Function) {
-    this._makeItem = factory
   }
 }
 
