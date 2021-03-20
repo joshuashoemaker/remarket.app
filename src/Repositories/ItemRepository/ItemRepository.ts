@@ -1,5 +1,6 @@
 import IItem from '../../Interfaces/Entities/IItem'
 import IItemRepository from '../../Interfaces/Repositories/IItemRepository'
+import ItemTypes from '../../StaticDataStructures/ItemTypes'
 
 class ItemRepository implements IItemRepository {
   public items: IItem[]
@@ -23,7 +24,7 @@ class ItemRepository implements IItemRepository {
 
   findByLabel = (label: string) => this.items.filter(i => i.label?.toLowerCase() === label.toLowerCase())
 
-  findByType = (type: string) => this.items.filter(i => i.type?.toLowerCase() === type.toLowerCase())
+  findByType = (type: ItemTypes) => this.items.filter(i => i.type?.toLowerCase() === type.toLowerCase())
 
   findByCostRange = (min: number, max: number) => {
     let items = this.items.filter(i => i.cost)

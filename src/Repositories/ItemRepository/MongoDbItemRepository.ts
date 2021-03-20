@@ -6,6 +6,7 @@ import makeItemClothing from '../../Factories/Item/makeItemClothing'
 import ItemClothingConstructor from '../../Interfaces/Entities/IItemClothing'
 import IItem from '../../Interfaces/Entities/IItem'
 import IItemRepository from '../../Interfaces/Repositories/IItemRepository'
+import ItemTypes from '../../StaticDataStructures/ItemTypes'
 
 class MongoDbItemRepository implements IItemRepository {
   getAllItems = async (): Promise<IItem[] | null> => {
@@ -95,7 +96,7 @@ class MongoDbItemRepository implements IItemRepository {
     /* Not implemented */
   }
 
-  findByType = (type: string) => {
+  findByType = (type: ItemTypes) => {
     return [new Item({id: 'test', isSold: false, isProcessed: false})]
     /* Not implemented */
   }

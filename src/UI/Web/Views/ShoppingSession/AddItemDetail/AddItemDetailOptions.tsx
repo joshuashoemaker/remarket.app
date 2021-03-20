@@ -1,16 +1,17 @@
 import * as React from 'react'
 import IItemClothing from '../../../../../Interfaces/Entities/IItemClothing'
+import ItemTypes from '../../../../../StaticDataStructures/ItemTypes'
 import AddClothingItemDetailToShoppingSession from './AddClothingItemDetailToShoppingSession'
 
 class AddItemDetailOptions extends React.Component {
   public clothingDetailForm: React.RefObject<AddClothingItemDetailToShoppingSession> = React.createRef()
     
-  getDetailsByDetailType (detailType: string) {
-    if (detailType === 'clothing') return this.clothingDetailForm.current?.details
+  getDetailsByDetailType (detailType: ItemTypes) {
+    if (detailType === ItemTypes.Clothing) return this.clothingDetailForm.current?.details
   }
   
   getElementByName (name: string, item?: IItemClothing) {
-    if (name === 'clothing') return <AddClothingItemDetailToShoppingSession ref={this.clothingDetailForm} item={item} />
+    if (name === ItemTypes.Clothing) return <AddClothingItemDetailToShoppingSession ref={this.clothingDetailForm} item={item} />
   }
 }
 
