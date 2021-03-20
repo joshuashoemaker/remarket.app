@@ -3,7 +3,7 @@ import history from '../history'
 import FinalizeShoppingSessionController from '../../Controllers/FinalizeShoppingSessionController'
 
 import { AppBar, Avatar, Backdrop, Button, CircularProgress, ListItemAvatar, ListItemSecondaryAction, Switch, Toolbar, Zoom, List, ListItem, ListItemText, Snackbar } from '@material-ui/core'
-import { ShoppingCart, Cancel } from '@material-ui/icons'
+import { Cancel, CheckCircle } from '@material-ui/icons'
 import './styles.css'
 
 interface FinalizeShoppingSessionProps { }
@@ -37,7 +37,6 @@ class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionPro
     this.setState({ isFinalizing: true })
 
     const response: Response = await this.controller.submit(this.state.checkedItems)
-    console.log(response)
     if (response.status === 201) {
       this.setState({ showSuccessMessage: true })
       await new Promise(resolve => setTimeout(resolve, 1500))
@@ -89,6 +88,10 @@ class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionPro
   render() {
     return <div className='FinalizeShoppingSession'>
       <List>
+        <ListItem className='subtotalListItem'>
+          <ListItemText primary='Subtotal'/> 
+          <ListItemSecondaryAction >$ { this.controller.shoppingSession.finalize(this.state.checkedItems).subtotal.toFixed(2) }</ListItemSecondaryAction>
+        </ListItem>
         { this.renderItemLineItems() }
       </List>
 
@@ -99,7 +102,7 @@ class FinalizeShoppingSession extends React.Component<FinalizeShoppingSessionPro
           </Button>
 
           <Button onClick={this.onSubmit} className='footerButton'>
-            <ShoppingCart htmlColor='#03DAC5' fontSize='large' />
+            <CheckCircle htmlColor='#03DAC5' fontSize='large' />
           </Button>
         </Toolbar>
       </AppBar>

@@ -74,9 +74,10 @@ class ShoppingSession implements IShoppingSession {
   finalize = (idsOfItemsToKeep?: string[]): IShoppingSessionRequest => {
     const itemIds = idsOfItemsToKeep || this.itemRepository.items!.map(i => i.id)
     const items = this.items.filter(i => itemIds.includes(i.id))
+    const subtotal = items.map(i => i.cost || 0).reduce((total, currentValue) => { return total + currentValue }, 0)
     return {
       id: this.id,
-      subtotal: this.subtotal,
+      subtotal: subtotal,
       tax: this.tax,
       total: this.total,
       items: items as IItemRequest[]

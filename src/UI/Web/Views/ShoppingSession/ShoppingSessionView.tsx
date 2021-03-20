@@ -6,7 +6,7 @@ import ShoppingSessionPlaceholder from './ShoppingSessionPlaceholder'
 import ShoppingSessionItem from './ShoppingSessionItem'
 import { AppBar, Button, IconButton, Toolbar, Zoom } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
-import { CheckCircle } from '@material-ui/icons'
+import { ShoppingCart } from '@material-ui/icons'
 import './styles.css'
 
 class ShoppingSessionView extends React.Component {
@@ -51,7 +51,7 @@ class ShoppingSessionView extends React.Component {
       <AppBar position='fixed' className='footer'>
         <Toolbar>
           <Button onClick={this.onSubmitClick} className='footerButton'>
-            <CheckCircle htmlColor='#03DAC5' fontSize='large' />
+            <ShoppingCart htmlColor='#03DAC5' fontSize='large' />
           </Button>
         </Toolbar>
       </AppBar>
