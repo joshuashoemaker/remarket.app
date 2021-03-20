@@ -3,11 +3,10 @@ import Item from '../../Entities/Item/Item'
 import User from '../../Entities/User/User'
 import makeItem from '../../Factories/Item/makeItem'
 import makeItemClothing from '../../Factories/Item/makeItemClothing'
-import ItemClothingConstructor from '../../Interfaces/Contructors/ItemClothingConstructor'
-import ItemConstructor from '../../Interfaces/Contructors/ItemConstructor'
+import ItemClothingConstructor from '../../Interfaces/Entities/IItemClothing'
 import IItem from '../../Interfaces/Entities/IItem'
 import IItemRepository from '../../Interfaces/Repositories/IItemRepository'
-import ApiItemResponse from '../../Interfaces/ResponseObjects/ApiItemResponse'
+import ItemTypes from '../../StaticDataStructures/ItemTypes'
 
 class MongoDbItemRepository implements IItemRepository {
   getAllItems = async (): Promise<IItem[] | null> => {
@@ -24,10 +23,10 @@ class MongoDbItemRepository implements IItemRepository {
       
       if (itemsResponse.status !== 200) return null
 
-      const itemsFromApi = itemsResponse.data.data as ApiItemResponse[]
+      const itemsFromApi = itemsResponse.data.data as IItem[]
       items = itemsFromApi.map(i => {
         if (i.type === 'clothing') return makeItemClothing(i as ItemClothingConstructor)
-        else return makeItem(i as ItemConstructor)
+        else return makeItem(i)
       })
     } catch (err) {
       console.log(err)
@@ -39,7 +38,7 @@ class MongoDbItemRepository implements IItemRepository {
 
   addItem = (item: IItem) => { /* Not implemented */ }
 
-  editById = async (id: string, modifications: ItemConstructor): Promise<IItem | null> => {
+  editById = async (id: string, modifications: IItem): Promise<IItem | null> => {
     let item: IItem | null = null
 
     modifications.imageUri = ''
@@ -55,9 +54,9 @@ class MongoDbItemRepository implements IItemRepository {
           withCredentials: true
         })
       if (itemResponse.status !== 201) return null
-      const itemFromApi = itemResponse.data.data as ApiItemResponse
+      const itemFromApi = itemResponse.data.data as IItem
       if (itemFromApi.type === 'clothing') item = makeItemClothing(itemFromApi as ItemClothingConstructor)
-      else item = makeItem(itemFromApi as ItemConstructor)
+      else item = makeItem(itemFromApi)
     } catch (err) {
       console.log(err)
     }
@@ -77,10 +76,10 @@ class MongoDbItemRepository implements IItemRepository {
       })
       if (itemResponse.status !== 200) return null
 
-      const itemFromApi = itemResponse.data.data as ApiItemResponse
+      const itemFromApi = itemResponse.data.data as IItem
 
       if (itemFromApi.type === 'clothing') return makeItemClothing(itemFromApi as ItemClothingConstructor)
-      else return makeItem(itemFromApi as ItemConstructor)
+      else return makeItem(itemFromApi)
     } catch (err) {
       console.log(err)
       return null
@@ -88,32 +87,32 @@ class MongoDbItemRepository implements IItemRepository {
   }
 
   findByBrand = (brand: string) => {
-    return [new Item({id: 'test'})]
+    return [new Item({id: 'test', isSold: false, isProcessed: false})]
     /* Not implemented */
   }
 
   findByLabel = (label: string) => {
-    return [new Item({id: 'test'})]
+    return [new Item({id: 'test', isSold: false, isProcessed: false})]
     /* Not implemented */
   }
 
-  findByType = (type: string) => {
-    return [new Item({id: 'test'})]
+  findByType = (type: ItemTypes) => {
+    return [new Item({id: 'test', isSold: false, isProcessed: false})]
     /* Not implemented */
   }
 
   findByCostRange = (min: number, max: number) => {
-    return [new Item({id: 'test'})]
+    return [new Item({id: 'test', isSold: false, isProcessed: false})]
     /* Not implemented */
   }
 
   findByDescriptedTag = (tag: string) => {
-    return [new Item({id: 'test'})]
+    return [new Item({id: 'test', isSold: false, isProcessed: false})]
     /* Not implemented */
   }
 
   removeItemById = (id: string) => {
-    return [new Item({id: 'test'})]
+    return [new Item({id: 'test', isSold: false, isProcessed: false})]
     /* Not implemented */
   }
 }

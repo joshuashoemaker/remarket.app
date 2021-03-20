@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { TextField } from '@material-ui/core'
-import ItemClothingConstructor from '../../../../../Interfaces/Contructors/ItemClothingConstructor'
+import IItemClothing from '../../../../../Interfaces/Entities/IItemClothing'
 
 interface EditClothingItemDetailInInventoryProps {
-  item?: ItemClothingConstructor
+  item?: IItemClothing
 }
 
 interface EditClothingItemDetailInInventoryState {

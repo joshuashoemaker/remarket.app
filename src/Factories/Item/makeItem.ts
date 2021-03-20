@@ -1,8 +1,7 @@
 import Item from "../../Entities/Item/Item"
-import ItemConstructor from "../../Interfaces/Contructors/ItemConstructor"
 import IItem from "../../Interfaces/Entities/IItem"
 
-const makeItem = (itemProps: ItemConstructor): IItem => {
+const makeItem = (itemProps: IItem): IItem => {
   return new Item(itemProps)
 }
 

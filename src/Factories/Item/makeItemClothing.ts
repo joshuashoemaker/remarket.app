@@ -1,8 +1,8 @@
 import ItemClothing from "../../Entities/Item/ItemClothing";
-import ItemClothingConstructor from "../../Interfaces/Contructors/ItemClothingConstructor";
+import IItemClothing from "../../Interfaces/Entities/IItemClothing";
 import IItem from "../../Interfaces/Entities/IItem";
 
-const makeItemClothing = (itemProps: ItemClothingConstructor): IItem => {
+const makeItemClothing = (itemProps: IItemClothing): IItem => {
   return new ItemClothing(itemProps)
 }
 

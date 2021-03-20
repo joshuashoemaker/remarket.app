@@ -1,17 +1,7 @@
-interface MongoItemResponse {
-  _id: string,
-  shoppingSessionId?: string,
-  label?: string,
-  brand?: string,
-  type?: string,
-  cost?: number,
-  descriptiveTags?: string[],
-  imageUri?: string,
-  imageKey?: string,
-  createdDate?: Date
-  isProcessed: boolean,
-  isSold: boolean,
-  sellPrice?: number
+import IItemRequest from "../RequestObjects/IItemRequest";
+
+interface MongoItemResponse extends IItemRequest {
+  _id: string
 }
 
 export default MongoItemResponse

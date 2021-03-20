@@ -1,6 +1,6 @@
 import IItem from '../../Interfaces/Entities/IItem'
-import ItemConstructor from '../../Interfaces/Contructors/ItemConstructor'
 import IItemRepository from '../../Interfaces/Repositories/IItemRepository'
+import ItemTypes from '../../StaticDataStructures/ItemTypes'
 
 class ItemRepository implements IItemRepository {
   public items: IItem[]
@@ -12,7 +12,7 @@ class ItemRepository implements IItemRepository {
 
   addItem = (item: IItem) => this.items.push(item)
 
-  editById = (id: string, modifications: ItemConstructor) => {
+  editById = (id: string, modifications: IItem) => {
     let item = this.findById(id)
     item = Object.assign(item, modifications)
     return item
@@ -24,7 +24,7 @@ class ItemRepository implements IItemRepository {
 
   findByLabel = (label: string) => this.items.filter(i => i.label?.toLowerCase() === label.toLowerCase())
 
-  findByType = (type: string) => this.items.filter(i => i.type?.toLowerCase() === type.toLowerCase())
+  findByType = (type: ItemTypes) => this.items.filter(i => i.type?.toLowerCase() === type.toLowerCase())
 
   findByCostRange = (min: number, max: number) => {
     let items = this.items.filter(i => i.cost)

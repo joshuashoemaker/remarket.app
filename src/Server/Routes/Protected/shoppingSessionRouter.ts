@@ -1,14 +1,14 @@
 import express from 'express'
 import Db from '../../Db'
-import errorCodes from '../../StaticDataStructures/errorCodes'
+import errorCodes from '../../../StaticDataStructures/errorCodes'
 import IShoppingSessionRequest from '../../../Interfaces/RequestObjects/IShoppingSessionRequest'
 import DbItem from '../../Entities/DbItem'
 import DbShoppingSession from '../../Entities/DbShoppingSession'
 import MongoShoppingSessionResponse from '../../../Interfaces/ResponseObjects/MongoShoppingSessionResponse'
 import MongoItemResponse from '../../../Interfaces/ResponseObjects/MongoItemResponse'
-import ApiItemResponse from '../../../Interfaces/ResponseObjects/ApiItemResponse'
 import ApiShoppingSessionResponse from '../../../Interfaces/ResponseObjects/ApiShoppingSessionResponse'
 import DbItemClothing from '../../Entities/DbItemClothing'
+import IItem from '../../../Interfaces/Entities/IItem'
 
 const router = express.Router()
 const db = new Db()
@@ -57,7 +57,7 @@ router.post('/', async (request, response) => {
     return
   }
 
-    const itemsResponse: ApiItemResponse[] = itemsDbSaveResponse.map(i => {
+    const itemsResponse: IItem[] = itemsDbSaveResponse.map(i => {
       return {...i, ...{id: i._id}}
     })
 

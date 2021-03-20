@@ -1,3 +1,4 @@
+import ItemTypes from "../../StaticDataStructures/ItemTypes";
 import MarketPlatforms from "../../StaticDataStructures/MarketPlatforms";
 
 interface IItem {
@@ -5,18 +6,17 @@ interface IItem {
   shoppingSessionId?: string,
   label?: string,
   brand?: string,
-  type?: string,
+  type?: ItemTypes,
   cost?: number,
   descriptiveTags?: string[],
   imageUri?: string,
   image?: File,
-  isProcessed: boolean,
-  isSold: boolean,
+  imageKey?: string,
+  isProcessed?: boolean,
+  isSold?: boolean,
   marketPlatform?: MarketPlatforms,
   listedPrice?: number,
-  sellPrice?: number,
-  addDescriptiveTag(tag: string): void,
-  removeDescriptiveTag(tag: string): void
+  sellPrice?: number
 }
 
 export default IItem

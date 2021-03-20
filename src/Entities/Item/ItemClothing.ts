@@ -1,11 +1,11 @@
 import Item from "./Item";
-import ItemClothingConstructor from "../../Interfaces/Contructors/ItemClothingConstructor";
+import IItemClothing from "../../Interfaces/Entities/IItemClothing";
 
 class ItemClothing extends Item {
   public material: string | undefined
   public timeOfProduction: Date | undefined
 
-  constructor (props: ItemClothingConstructor) {
+  constructor (props: IItemClothing) {
     super(props)
     this.material = props.material
     this.timeOfProduction = props.timeOfProduction

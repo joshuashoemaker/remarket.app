@@ -1,6 +1,6 @@
 import express from 'express'
 import Db from '../Db'
-import ErrorCodes from '../StaticDataStructures/errorCodes'
+import ErrorCodes from '../../StaticDataStructures/errorCodes'
 import { v4 as uuidv4 } from 'uuid'
 import base64 from 'base-64'
 import crypto from 'crypto'

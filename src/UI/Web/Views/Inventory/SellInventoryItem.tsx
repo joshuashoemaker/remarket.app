@@ -8,12 +8,13 @@ import { AppBar, Backdrop, Box, Button, Chip, CircularProgress, IconButton, Menu
 import { Cancel, Check } from '@material-ui/icons'
 import './styles.css'
 import MarketPlatforms from '../../../../StaticDataStructures/MarketPlatforms'
+import ItemTypes from '../../../../StaticDataStructures/ItemTypes'
 
 interface SellInventoryItemProps { }
 
 interface SellInventoryItemState {
   cost: number | '',
-  type: string,
+  type: ItemTypes,
   brand: string,
   label: string,
   tagFieldValue: string,
@@ -39,7 +40,7 @@ class SellInventoryItem extends React.Component<SellInventoryItemProps, SellInve
     this.state = {
       itemImageSrc: 'https://designshack.net/wp-content/uploads/placeholder-image.png',
       cost: '',
-      type: 'NA',
+      type: ItemTypes.NA,
       brand: '',
       label: '',
       tagFieldValue: '',
@@ -61,7 +62,7 @@ class SellInventoryItem extends React.Component<SellInventoryItemProps, SellInve
     this.setState({
       itemImageSrc: this.item?.imageUri || 'https://designshack.net/wp-content/uploads/placeholder-image.png',
       cost: this.item?.cost || '',
-      type: this.item?.type || 'NA',
+      type: this.item?.type as ItemTypes || ItemTypes.NA,
       brand: this.item?.brand || '',
       label: this.item?.label || '',
       marketPlatform: this.item?.marketPlatform || MarketPlatforms.none,
