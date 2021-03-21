@@ -4,16 +4,22 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import './styles.css'
-import { Zoom, ListItemAvatar, Avatar, ListItemSecondaryAction, Switch, Typography, FormControlLabel } from '@material-ui/core'
+import { Zoom, ListItemAvatar, Avatar, ListItemSecondaryAction, Switch, Typography, FormControlLabel, AppBar, Backdrop, Button, CircularProgress, Snackbar, Toolbar, Dialog, DialogTitle, DialogContent, TextField } from '@material-ui/core'
 import InventoryController from '../../Controllers/InventoryController'
 import IItem from '../../../../Interfaces/Entities/IItem'
+import { Cancel, Check, ClearAll, Search } from '@material-ui/icons'
+import InventoryQueryBuilder from './InventoryQueryBuilder'
 
 interface InventoryViewProps { }
 
 interface InventoryViewState {
   items: IItem[] | null,
   processedItemIds: string[]
-  soldItemIds: string[]
+  soldItemIds: string[],
+  isLoading: boolean,
+  showSuccessMessage: boolean,
+  showErrorMessage: boolean,
+  showQueryBuilder: boolean
 }
 
 class InventoryView extends React.Component<InventoryViewProps, InventoryViewState> {
@@ -21,7 +27,15 @@ class InventoryView extends React.Component<InventoryViewProps, InventoryViewSta
 
   constructor(props: InventoryViewProps = {}) {
     super(props)
-    this.state = { items: null, processedItemIds: [], soldItemIds: [] }
+    this.state = {
+      isLoading: true,
+      showSuccessMessage: false,
+      showErrorMessage: false,
+      showQueryBuilder: false,
+      items: null,
+      processedItemIds: [],
+      soldItemIds: []
+    }
     this.getItems()
   }
 
@@ -29,7 +43,11 @@ class InventoryView extends React.Component<InventoryViewProps, InventoryViewSta
     const items = await this.controller.getItems()
     const processedItemIds = items?.filter(i => i.isProcessed).map(i => i.id) || []
     const soldItemIds = items?.filter(i => i.isSold).map(i => i.id) || []
-    this.setState({ items, processedItemIds, soldItemIds })
+    this.setState({ items, processedItemIds, soldItemIds, isLoading: false })
+
+    if (items && items.length < 1) this.setState({ showErrorMessage: true })
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    this.setState({ showErrorMessage: false })
   }
 
   isItemProcessed = (id: string): boolean => {
@@ -68,6 +86,28 @@ class InventoryView extends React.Component<InventoryViewProps, InventoryViewSta
     history.push(`/inventory/sell/${id}`)
   }
 
+  toggleQueryBuilder = () => {
+    this.setState({ showQueryBuilder: !this.state.showQueryBuilder })
+  }
+
+  onClearQuery = () => {
+    this.onQuery({})
+  }
+
+  onQuery = async (query: any) => {
+    this.setState({ isLoading: true, showQueryBuilder: false })
+
+    const items = await this.controller.getItemsByQuery(query)
+    
+    const processedItemIds = items?.filter(i => i.isProcessed).map(i => i.id) || []
+    const soldItemIds = items?.filter(i => i.isSold).map(i => i.id) || []
+    this.setState({ items, processedItemIds, soldItemIds, isLoading: false })
+
+    if (items && items.length < 1) this.setState({ showErrorMessage: true })
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    this.setState({ showErrorMessage: false })
+  }
+
   renderSwitch = (item: IItem) => {
     if (!item.isProcessed) return <FormControlLabel
       value="top"
@@ -103,11 +143,40 @@ class InventoryView extends React.Component<InventoryViewProps, InventoryViewSta
     )
   }
 
+  renderQueryBuilder = () => {
+    return <Dialog open={this.state.showQueryBuilder} onClose={this.toggleQueryBuilder} color='primary'>
+      <DialogTitle>Query Inventory</DialogTitle>
+      <DialogContent>
+        <TextField autoFocus margin='dense' label='Brand' />
+      </DialogContent>
+    </Dialog>
+  }
+
   render() {
     return <div className='Inventory'>
       <List component="nav">
         {this.renderItems()}
       </List>
+
+      <InventoryQueryBuilder onQuery={this.onQuery} showQueryBuilder={this.state.showQueryBuilder} toggleQueryBuilder={this.toggleQueryBuilder} />
+
+      <AppBar position='fixed' className='footer'>
+        <Toolbar>
+          <Button onClick={this.onClearQuery} className='footerButton'>
+            <ClearAll htmlColor='#ff6868' fontSize='large' />
+          </Button>
+          <Button onClick={this.toggleQueryBuilder} className='footerButton'>
+            <Search htmlColor='#03DAC5' fontSize='large' />
+          </Button>
+        </Toolbar>
+      </AppBar>
+
+      <Backdrop style={{ zIndex: 100 }} open={this.state.isLoading}>
+        <CircularProgress color='primary' />
+      </Backdrop>
+
+      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={this.state.showSuccessMessage} message='Success' />
+      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={this.state.showErrorMessage} message=' No Items Found' />
     </div>
   }
 }

@@ -98,6 +98,7 @@ class SellInventoryItem extends React.Component<SellInventoryItemProps, SellInve
     let itemProps = {
       id: this.item!.id,
       imageUri: this.state.itemImageSrc,
+      imageKey: this.item!.imageKey,
       cost: this.state.cost || undefined,
       type: this.state.type === 'NA' ? undefined : this.state.type,
       brand: this.state.brand,

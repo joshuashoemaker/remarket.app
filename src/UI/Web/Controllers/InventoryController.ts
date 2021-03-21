@@ -36,6 +36,10 @@ class InventoryController {
     item.imageKey = imageKey
     return await this.itemsRepository.editById(item.id, item)
   }
+
+  getItemsByQuery = async (query: any) => {
+    return await this.itemsRepository.findByQuery(query)
+  }
 }
 
 export default InventoryController

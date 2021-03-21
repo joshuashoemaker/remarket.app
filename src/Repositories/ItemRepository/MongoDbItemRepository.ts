@@ -86,6 +86,34 @@ class MongoDbItemRepository implements IItemRepository {
     }
   }
 
+  findByQuery = async (query: any): Promise<IItem[] | null> => {
+    let items: IItem[] = []
+    try {
+      const itemsResponse = await axios.post('/api/protected/item/_find',
+      query,
+      {
+        headers: {
+          Authorization: `Bearer ${User.token}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      })
+
+      if (itemsResponse.status !== 200) return null
+
+      const itemsFromApi = itemsResponse.data.data as IItem[]
+      items = itemsFromApi.map(i => {
+        if (i.type === 'clothing') return makeItemClothing(i as ItemClothingConstructor)
+        else return makeItem(i)
+      })
+    } catch (err) {
+      console.log(err)
+      return null
+    }
+
+    return items
+  }
+
   findByBrand = (brand: string) => {
     return [new Item({id: 'test', isSold: false, isProcessed: false})]
     /* Not implemented */
