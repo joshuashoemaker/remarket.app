@@ -27,6 +27,7 @@ interface EditInventoryItemState {
   isFinalizing: boolean,
   showSuccessMessage: boolean,
   showErrorMessage: boolean
+  itemDetails: object
 }
 
 class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInventoryItemState> {
@@ -70,7 +71,8 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
       marketPlatform: this.item?.marketPlatform || MarketPlatforms.none,
       listedPrice: this.item?.listedPrice || '',
       tagFieldValue: '',
-      descriptiveTags: this.item?.descriptiveTags || []
+      descriptiveTags: this.item?.descriptiveTags || [],
+      itemDetails: {}
     })
   }
 
@@ -87,6 +89,12 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
   }
 
   moveToSection = (section: number) => {
+    if (this.state.activeSectionNumber === 0 && section === 1) {
+      const itemDetails = this.itemDetailOptions.getDetailsByDetailType(this.state.type)
+      this.setState({ itemDetails: itemDetails || {} })
+    }
+
+
     if (section < 0) history.goBack()
     else if (section >= 3) this.onSubmit()
     else this.setState({ activeSectionNumber: section })
@@ -162,7 +170,9 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
       marketPlatform: this.state.marketPlatform,
       isProcessed: true
     }
-    const itemDetails = this.itemDetailOptions.getDetailsByDetailType(this.state.type)
+
+    const itemDetails = {...this.state.itemDetails}
+
     if (itemDetails) itemProps = Object.assign(itemProps, itemDetails)
 
     const response = await this.controller.editItem(itemProps)
