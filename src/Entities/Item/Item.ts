@@ -12,6 +12,7 @@ class Item implements IItem {
   public descriptiveTags: string[]
   public image?: File
   public imageUri?: string
+  public imageKey?: string
   public isProcessed: boolean
   public isSold: boolean
   public marketPlatform: MarketPlatforms
@@ -27,6 +28,7 @@ class Item implements IItem {
     this.descriptiveTags = props.descriptiveTags || []
     this.image = props.image
     this.imageUri = props.imageUri
+    this.imageKey = props.imageKey
     this.isProcessed = props.isProcessed || false
     this.isSold = props.isSold || false
     this.marketPlatform = props.marketPlatform || MarketPlatforms.none

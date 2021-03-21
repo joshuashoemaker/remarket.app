@@ -15,7 +15,7 @@ class InventoryController {
   }
 
   editItem = async (item: IItem) => {
-    let imageKey: string = ''
+    let imageKey: string = item.imageKey || ''
 
     if (item.image) {
       const formData = new FormData()

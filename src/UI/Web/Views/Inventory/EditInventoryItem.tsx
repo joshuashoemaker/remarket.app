@@ -53,7 +53,8 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
       listedPrice: '',
       isFinalizing: false,
       showSuccessMessage: false,
-      showErrorMessage: false
+      showErrorMessage: false,
+      itemDetails: {}
     }
 
     this.getItem()
@@ -161,6 +162,7 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
       id: this.item!.id,
       image: this.uploadedImage,
       imageUri: this.state.itemImageSrc,
+      imageKey: this.item!.imageKey,
       cost: this.state.cost || undefined,
       type: this.state.type === ItemTypes.NA ? undefined : this.state.type,
       brand: this.state.brand,

@@ -63,7 +63,6 @@ class EditClothingItemDetailInInventory extends React.Component<EditClothingItem
   }
 
   get details () {
-    console.log('getting details')
     const dateInputValue: string = this.state.timeOfProduction
     const dateParts: string[] = dateInputValue.split('-')
     let timeOfProduction: Date | null = null
