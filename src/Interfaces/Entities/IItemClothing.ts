@@ -5,8 +5,7 @@ interface IItemClothing extends IItem {
   material?: string,
   gender?: ClothingGenders,
   article?: ClothingArticles,
-  articleDetail?: string,
-  timeOfProduction?: Date
+  articleDetail?: string
 }
 
 export default IItemClothing

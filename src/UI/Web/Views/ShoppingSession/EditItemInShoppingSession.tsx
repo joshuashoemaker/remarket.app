@@ -21,7 +21,8 @@ interface AddItemState {
   label: string,
   tagFieldValue: string,
   descriptiveTags: string[],
-  itemImageSrc: string
+  itemImageSrc: string,
+  timeOfProduction: string,
 }
 
 class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemState> {
@@ -40,12 +41,24 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
     this.itemDetailOptions = new AddItemDetailOptions({/* empty props */})
     this.item = this.controller.currentItem
 
+
+    let timeOfProduction = ''
+    if (this.item?.timeOfProduction) {
+      const date: Date = this.item?.timeOfProduction
+      let dateOfMonth = `${date.getDate()}`
+      if (dateOfMonth.length === 1) dateOfMonth = `0${dateOfMonth}`
+      let month = `${date.getMonth() + 1}`
+      if (month.length === 1) month = `0${month}`
+      timeOfProduction = `${date.getFullYear()}-${month}-${dateOfMonth}`
+    }
+
     this.state = {
       itemImageSrc: this.item?.imageUri || 'https://designshack.net/wp-content/uploads/placeholder-image.png',
       cost: this.item?.cost || '',
       type: this.item?.type as ItemTypes || ItemTypes.NA,
       brand: this.item?.brand || '',
       label: this.item?.label || '',
+      timeOfProduction: timeOfProduction,
       tagFieldValue: '',
       descriptiveTags: this.item?.descriptiveTags || []
     }
@@ -105,21 +118,33 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
     this.setState({ tagFieldValue })
   }
 
+  onTimeOfProductionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ timeOfProduction: e.target.value })
+  }
+
   onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const type = e.target.value as ItemTypes
     this.setState({ type })
   }
 
   onSubmit = () => {
+    let timeOfProduction: Date | undefined = undefined
+    if (this.state.timeOfProduction) {
+      const dateInputValue: string = this.state.timeOfProduction
+      const dateParts: string[] = dateInputValue.split('-')
+      if (dateParts.length === 3) timeOfProduction = new Date(`${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`)
+    }
+
     let itemProps = {
       id: this.controller.itemId,
       image: this.uploadedImage,
       imageUri: this.state.itemImageSrc,
       cost: this.state.cost || undefined,
-      type: this.state.type === 'NA' ? undefined : this.state.type,
+      type: this.state.type === ItemTypes.NA ? undefined : this.state.type,
       brand: this.state.brand,
       label: this.state.label,
-      descriptiveTags: this.state.descriptiveTags
+      descriptiveTags: this.state.descriptiveTags,
+      timeOfProduction: timeOfProduction
     }
     const itemDetails = this.itemDetailOptions.getDetailsByDetailType(this.state.type)
     if (itemDetails) itemProps = Object.assign(itemProps, itemDetails)
@@ -166,6 +191,8 @@ class EditItemInShoppingSession extends React.Component<AddItemProps, AddItemSta
         
         <TextField value={this.state.brand} onChange={this.onBrandChange} id='brandField' className='formInput' label='Brand' variant='outlined' fullWidth />
         
+        <TextField value={this.state.timeOfProduction} onChange={this.onTimeOfProductionChange} InputLabelProps={{ shrink: true }} type='date' id='timeOfProductionField' className='formInput' label='Time of Production' variant='outlined' fullWidth />
+
         <TextField value={this.state.type} onChange={this.onTypeChange} id='typeField' className='formInput' label='Type' variant='outlined' select fullWidth defaultValue={ItemTypes.NA}>
           <MenuItem value={ItemTypes.NA}><em>None</em></MenuItem>
           <MenuItem value={ItemTypes.Clothing}>Clothing</MenuItem>

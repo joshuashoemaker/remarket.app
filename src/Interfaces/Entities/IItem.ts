@@ -8,6 +8,7 @@ interface IItem {
   brand?: string,
   type?: ItemTypes,
   cost?: number,
+  timeOfProduction?: Date,
   descriptiveTags?: string[],
   imageUri?: string,
   image?: File,

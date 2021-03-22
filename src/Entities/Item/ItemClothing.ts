@@ -4,7 +4,6 @@ import { ClothingArticles, ClothingGenders } from "../../StaticDataStructures/Cl
 
 class ItemClothing extends Item {
   public material?: string
-  public timeOfProduction?: Date
   public gender?: ClothingGenders
   public article?: ClothingArticles
   public articleDetail?: string
@@ -15,7 +14,6 @@ class ItemClothing extends Item {
     this.articleDetail = props.articleDetail
     this.gender = props.gender
     this.material = props.material
-    this.timeOfProduction = props.timeOfProduction
   }
 }
 

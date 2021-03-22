@@ -10,6 +10,7 @@ class DbItem implements Record {
   private readonly brand?: string
   private readonly type?: ItemTypes
   private readonly cost?: number
+  private readonly timeOfProduction?: Date
   private readonly descriptiveTags?: string[]
   private readonly imageUri?: string
   private readonly imageKey?: string
@@ -25,6 +26,7 @@ class DbItem implements Record {
     this.brand = item.brand
     this.type = item.type
     this.cost = item.cost
+    this.timeOfProduction = item.timeOfProduction
     this.descriptiveTags = item.descriptiveTags
     this.imageUri = item.imageUri
     this.imageKey = item.imageKey
@@ -51,6 +53,7 @@ class DbItem implements Record {
       brand: this.brand,
       type: this.type,
       cost: this.cost,
+      timeOfProduction: this.timeOfProduction,
       descriptiveTags: this.descriptiveTags,
       imageUri: this.imageUri,
       imageKey: this.imageKey,

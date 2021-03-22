@@ -4,7 +4,6 @@ import DbItem from './DbItem'
 
 class DbItemClothing extends DbItem {
   private material?: string
-  private timeOfProduction?: Date
   public gender?: ClothingGenders
   public article?: ClothingArticles
   public articleDetail?: string
@@ -15,7 +14,6 @@ class DbItemClothing extends DbItem {
     this.articleDetail = item.articleDetail
     this.gender = item.gender
     this.material = item.material
-    this.timeOfProduction = item.timeOfProduction
   }
 
   public get record () {
@@ -23,8 +21,7 @@ class DbItemClothing extends DbItem {
       article: this.article,
       articleDetail: this.articleDetail,
       gender: this.gender,
-      material: this.material,
-      timeOfProduction: this.timeOfProduction
+      material: this.material
     }
     return { ...super.record, ...overloadedProps }
   }

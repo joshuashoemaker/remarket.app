@@ -27,7 +27,8 @@ interface EditInventoryItemState {
   isFinalizing: boolean,
   showSuccessMessage: boolean,
   showErrorMessage: boolean
-  itemDetails: object
+  itemDetails: object,
+  timeOfProduction: string
 }
 
 class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInventoryItemState> {
@@ -54,7 +55,8 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
       isFinalizing: false,
       showSuccessMessage: false,
       showErrorMessage: false,
-      itemDetails: {}
+      itemDetails: {},
+      timeOfProduction: ''
     }
 
     this.getItem()
@@ -63,6 +65,17 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
 
   getItem = async () => {
     this.item = await this.controller.getItemById(this.getItemIdFromUrl()) || undefined
+
+    let timeOfProduction = ''
+    if (this.item?.timeOfProduction) {
+      const date: Date = new Date(this.item?.timeOfProduction)
+      let dateOfMonth = `${date.getDate()}`
+      if (dateOfMonth.length === 1) dateOfMonth = `0${dateOfMonth}`
+      let month = `${date.getMonth() + 1}`
+      if (month.length === 1) month = `0${month}`
+      timeOfProduction = `${date.getFullYear()}-${month}-${dateOfMonth}`
+    }
+
     this.setState({
       itemImageSrc: this.item?.imageUri || 'https://designshack.net/wp-content/uploads/placeholder-image.png',
       cost: this.item?.cost || '',
@@ -73,7 +86,8 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
       listedPrice: this.item?.listedPrice || '',
       tagFieldValue: '',
       descriptiveTags: this.item?.descriptiveTags || [],
-      itemDetails: {}
+      itemDetails: {},
+      timeOfProduction
     })
   }
 
@@ -150,6 +164,10 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
     this.setState({ tagFieldValue })
   }
 
+  onTimeOfProductionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ timeOfProduction: e.target.value })
+  }
+
   onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const type = e.target.value as ItemTypes
     this.setState({ type })
@@ -157,6 +175,13 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
 
   onSubmit = async () => {
     this.setState({ isFinalizing: true })
+
+    let timeOfProduction: Date | undefined = undefined
+    if (this.state.timeOfProduction) {
+      const dateInputValue: string = this.state.timeOfProduction
+      const dateParts: string[] = dateInputValue.split('-')
+      if (dateParts.length === 3) timeOfProduction = new Date(`${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`)
+    }
 
     let itemProps = {
       id: this.item!.id,
@@ -220,6 +245,8 @@ class EditInventoryItem extends React.Component<EditInventoryItemProps, EditInve
 
         <TextField value={this.state.brand} onChange={this.onBrandChange} id='brandField' className='formInput' label='Brand' variant='outlined' fullWidth />
 
+        <TextField value={this.state.timeOfProduction} onChange={this.onTimeOfProductionChange} InputLabelProps={{ shrink: true }} type='date' id='timeOfProductionField' className='formInput' label='Time of Production' variant='outlined' fullWidth />
+        
         <TextField value={this.state.type} onChange={this.onTypeChange} id='typeField' className='formInput' label='Type' variant='outlined' select fullWidth defaultValue={ItemTypes.NA}>
           <MenuItem value={ItemTypes.NA}><em>None</em></MenuItem>
           <MenuItem value={ItemTypes.Clothing}>Clothing</MenuItem>

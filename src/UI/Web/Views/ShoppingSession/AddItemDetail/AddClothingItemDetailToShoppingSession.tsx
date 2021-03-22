@@ -11,8 +11,7 @@ interface AddItemState {
   gender: ClothingGenders,
   article?: ClothingArticles,
   articleDetail: string,
-  material: string,
-  timeOfProduction: string,
+  material: string
 }
 
 class AddClothingItemDetailToShoppingSession extends React.Component<AddItemProps, AddItemState> {
@@ -20,25 +19,11 @@ class AddClothingItemDetailToShoppingSession extends React.Component<AddItemProp
   constructor(props: AddItemProps) {
     super(props)
 
-    let timeOfProduction = ''
-    if (props.item?.timeOfProduction) {
-      const date: Date = props.item?.timeOfProduction
-
-      let dateOfMonth = `${date.getDate()}`
-      if (dateOfMonth.length === 1) dateOfMonth = `0${dateOfMonth}`
-
-      let month = `${date.getMonth() + 1}`
-      if (month.length === 1) month = `0${month}`
-
-      timeOfProduction = `${date.getFullYear()}-${month}-${dateOfMonth}`
-    }
-
     this.state = {
       gender: props.item?.gender || ClothingGenders.Unisex,
       article: props.item?.article || ClothingArticles.Top,
       articleDetail: props.item?.articleDetail || '',
       material: props.item?.material || '',
-      timeOfProduction: timeOfProduction
     }
   }
 
@@ -58,22 +43,12 @@ class AddClothingItemDetailToShoppingSession extends React.Component<AddItemProp
     this.setState({ material: e.target.value })
   }
 
-  onTimeOfProductionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ timeOfProduction: e.target.value })
-  }
-
   get details() {
-    const dateInputValue: string = this.state.timeOfProduction
-    const dateParts: string[] = dateInputValue.split('-')
-    let timeOfProduction: Date | null = null
-    if (dateParts.length === 3) timeOfProduction = new Date(`${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`)
-
     return {
       article: this.state.article,
       articleDetail: this.state.articleDetail,
       gender: this.state.gender,
       material: this.state.material,
-      timeOfProduction: timeOfProduction
     }
   }
 
@@ -117,7 +92,6 @@ class AddClothingItemDetailToShoppingSession extends React.Component<AddItemProp
   render() {
     return <div className='AddClothingItemDetailToShoppingSession itemDetails'>
       <TextField value={this.state.material} onChange={this.onMaterialChange} id='materialField' className='formInput' label='Material' variant='outlined' fullWidth />
-      <TextField value={this.state.timeOfProduction} onChange={this.onTimeOfProductionChange} InputLabelProps={{ shrink: true }} type='date' id='timeOfProductionField' className='formInput' label='Time of Production' variant='outlined' fullWidth />
 
       <TextField value={this.state.gender} onChange={this.onGenderChange} id='typeField' className='formInput' label='Gender' variant='outlined' select fullWidth defaultValue={ClothingGenders.Unisex}>
         <MenuItem value={ClothingGenders.Female}>Female</MenuItem>

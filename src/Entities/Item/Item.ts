@@ -8,6 +8,7 @@ class Item implements IItem {
   public brand?: string
   public type?: ItemTypes
   public cost?: number
+  public timeOfProduction?: Date
   public label?: string
   public descriptiveTags: string[]
   public image?: File
@@ -24,6 +25,7 @@ class Item implements IItem {
     this.brand = props.brand
     this.type = props.type
     this.cost = props.cost
+    this.timeOfProduction = props.timeOfProduction
     this.label = props.label
     this.descriptiveTags = props.descriptiveTags || []
     this.image = props.image

@@ -33,6 +33,7 @@ router.post('/', async (request, response) => {
   const itemsInShoppingSession = items.map(i => {
     i.userId = userId
     i.shoppingSessionId = id
+    if (i.timeOfProduction) i.timeOfProduction = new Date(i.timeOfProduction)
     if (i.type === 'clothing') return new DbItemClothing(i)
     return new DbItem(i)
   })
