@@ -136,6 +136,9 @@ router.post('/edit/:id', async (request, response) => {
     let itemProps = { ...item }
 
     delete itemProps._id
+    itemProps.timeOfProduction = new Date(itemProps.timeOfProduction)
+    itemProps.modifiedDate = new Date()
+
     itemDbEditResponse = await db.findOneAndUpdate({ _id: itemId }, 'Items', itemProps)
   } catch (err) {
     responseToClient.message = errorCodes.Err20
