@@ -17,7 +17,6 @@ enum ClothingArticles {
 
 const maleTops = [
   'tank top',
-  // 't-shirt',
   'casual shirt',
   'polo shirt',
   'dress shirt',
@@ -51,7 +50,8 @@ const maleUnderwear = [
 const maleOuterwear = [
   'blazer',
   'bomber jacket',
-  'cape or poncho',
+  'cape',
+  'poncho',
   'parka',
   'pea coat',
   'puffer jacket',
@@ -72,8 +72,9 @@ const maleAccessories = [
   'hat',
   'scarve',
   'socks',
+  'glasses',
   'sunglasses',
-  'watche',
+  'watch',
   'other',
 ]
 
@@ -83,7 +84,8 @@ const maleShoes = [
   'chelsea boots',
   'casual shoes',
   'dress shoes',
-  'flip flops or slides',
+  'flip flops',
+  'slides',
   'sneakers',
   'brogues',
   'other'
@@ -165,7 +167,8 @@ const femaleLingerie = [
 const femaleOuterwear = [
   'blazer',
   'bomber',
-  'cape or poncho',
+  'cape',
+  'poncho',
   'kimonos',
   'parka',
   'pea coat',
@@ -185,6 +188,7 @@ const femaleAccessories = [
   'scarve',
   'socks or tights',
   'sunglasses',
+  'glasses',
   'wallet',
   'watch',
   'gloves',
