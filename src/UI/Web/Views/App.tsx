@@ -10,8 +10,34 @@ import ShoppingSessionView from './ShoppingSession/ShoppingSessionView'
 import EditInventoryItem from './Inventory/EditInventoryItem'
 import SellInventoryItem from './Inventory/SellInventoryItem'
 import Login from './Login/Login'
+import axios, { AxiosResponse } from 'axios'
+import User from '../../../Entities/User/User'
+import history from './history'
 
 class App extends React.Component {
+  constructor (props = {}) {
+    super(props)
+    
+    this.redirectNonauthenticatedUser()
+  }
+
+  redirectNonauthenticatedUser = async () => {
+    let isUserAuthenticatedRequest: AxiosResponse<any>
+    try {
+      isUserAuthenticatedRequest = await axios.get('/api/protected/verifyAuthentication', {
+        headers: {
+          Authorization: `Bearer ${User.token}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      })
+
+      if (isUserAuthenticatedRequest.status !== 200) history.push('/login')
+    } catch (err) {
+      history.push('/login')
+    }
+  }
+
   render () {
     return <main className='App'>
       <Header />
