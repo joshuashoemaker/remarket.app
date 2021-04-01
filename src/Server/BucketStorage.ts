@@ -27,13 +27,26 @@ class BucketStorage {
     }
   }
 
-  public static getPresignedUrl (props: { bucketName: string, key: string, expiresInSeconds: number }) {
+  public static getDownloadPresignedUrl (props: { bucketName: string, key: string, expiresInSeconds: number }) {
     const expriesInMiliseconds = (props.expiresInSeconds * 1000) || 60000
     const presignedUrlResponse = this.s3.getSignedUrl('getObject', {
       Bucket: props.bucketName,
       Key: props.key,
       Expires: expriesInMiliseconds
     })
+    return presignedUrlResponse
+  }
+
+  public static getUploadPresignedUrl (props: {bucketName: string, key: string, expiresInSeconds: number, contentType: string}) {
+    const expriesInMiliseconds = (props.expiresInSeconds * 1000) || 10000
+    const presignedUrlResponse = this.s3.getSignedUrl('putObject', {
+      Bucket: props.bucketName,
+      Key: props.key,
+      Expires: expriesInMiliseconds,
+      ContentType: props.contentType,
+      ACL: 'private'
+    })
+    console.log(presignedUrlResponse)
     return presignedUrlResponse
   }
 

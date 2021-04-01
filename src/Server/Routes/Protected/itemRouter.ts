@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { request, response } from 'express'
 import MongoItemResponse from '../../../Interfaces/ResponseObjects/MongoItemResponse'
 import Db from '../../Db'
 import errorCodes from '../../../StaticDataStructures/errorCodes'
@@ -31,7 +31,7 @@ router.get('/', async (request, response) => {
   const itemsResponse: IItem[] = itemDbFindResponse.map(i => {
     let presignedItemImageUrl: string = ''
     if (i.imageKey) {
-      presignedItemImageUrl = BucketStorage.getPresignedUrl({
+      presignedItemImageUrl = BucketStorage.getDownloadPresignedUrl({
         bucketName: 'remarket',
         key: i.imageKey,
         expiresInSeconds: 600
@@ -68,7 +68,7 @@ router.post('/_find', async (request, response) => {
   const itemsResponse: IItem[] = itemDbFindResponse.map(i => {
     let presignedItemImageUrl: string = ''
     if (i.imageKey) {
-      presignedItemImageUrl = BucketStorage.getPresignedUrl({
+      presignedItemImageUrl = BucketStorage.getDownloadPresignedUrl({
         bucketName: 'remarket',
         key: i.imageKey,
         expiresInSeconds: 600
@@ -104,7 +104,7 @@ router.get('/:id', async (request, response) => {
   
   let presignedItemImageUrl: string = ''
   if (itemDbFindResponse.imageKey) {
-    presignedItemImageUrl = BucketStorage.getPresignedUrl({
+    presignedItemImageUrl = BucketStorage.getDownloadPresignedUrl({
       bucketName: 'remarket',
       key: itemDbFindResponse.imageKey,
       expiresInSeconds: 600
@@ -151,6 +151,35 @@ router.post('/edit/:id', async (request, response) => {
 
   responseToClient.data = itemResponse
   response.status(201)
+  response.send(responseToClient)
+})
+
+router.post('/getPresignedImageUploadUrl', async (request, response) => {
+  const { fileName, mimeType } = request.body
+
+  let responseToClient = {
+    message: errorCodes.OK,
+    data: {}
+  }
+
+  let presignedUrl = ''
+  try {
+    presignedUrl = BucketStorage.getUploadPresignedUrl({
+      bucketName: 'remarket',
+      key: 'test.jpeg',//fileName,
+      expiresInSeconds: 90,
+      contentType: mimeType
+    })
+  } catch (err) {
+    console.log(err)
+    responseToClient.message = errorCodes.Err20
+    response.status(500)
+    response.send(responseToClient)
+    return
+  }
+
+  responseToClient.data = { presignedUrl }
+  response.status(200)
   response.send(responseToClient)
 })
 
