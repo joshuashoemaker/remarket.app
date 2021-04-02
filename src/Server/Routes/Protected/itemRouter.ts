@@ -166,7 +166,7 @@ router.post('/getPresignedImageUploadUrl', async (request, response) => {
   try {
     presignedUrl = BucketStorage.getUploadPresignedUrl({
       bucketName: 'remarket',
-      key: 'test.jpeg',//fileName,
+      key: fileName,
       expiresInSeconds: 90,
       contentType: mimeType
     })
