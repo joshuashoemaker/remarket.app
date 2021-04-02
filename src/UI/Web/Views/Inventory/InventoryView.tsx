@@ -4,18 +4,16 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import './styles.css'
-import { Zoom, ListItemAvatar, Avatar, ListItemSecondaryAction, Switch, Typography, FormControlLabel, AppBar, Backdrop, Button, CircularProgress, Snackbar, Toolbar, Dialog, DialogTitle, DialogContent, TextField } from '@material-ui/core'
+import { Zoom, ListItemAvatar, Avatar, ListItemSecondaryAction, AppBar, Backdrop, Button, CircularProgress, Snackbar, Toolbar, Dialog, DialogTitle, DialogContent, TextField } from '@material-ui/core'
 import InventoryController from '../../Controllers/InventoryController'
 import IItem from '../../../../Interfaces/Entities/IItem'
-import { Cancel, Check, ClearAll, Search } from '@material-ui/icons'
+import { ClearAll, Search } from '@material-ui/icons'
 import InventoryQueryBuilder from './InventoryQueryBuilder'
 
 interface InventoryViewProps { }
 
 interface InventoryViewState {
   items: IItem[] | null,
-  processedItemIds: string[]
-  soldItemIds: string[],
   isLoading: boolean,
   showSuccessMessage: boolean,
   showErrorMessage: boolean,
@@ -33,55 +31,25 @@ class InventoryView extends React.Component<InventoryViewProps, InventoryViewSta
       showErrorMessage: false,
       showQueryBuilder: false,
       items: null,
-      processedItemIds: [],
-      soldItemIds: []
     }
     this.getItems()
   }
 
   getItems = async () => {
     const items = await this.controller.getItems()
-    const processedItemIds = items?.filter(i => i.isProcessed).map(i => i.id) || []
-    const soldItemIds = items?.filter(i => i.isSold).map(i => i.id) || []
-    this.setState({ items, processedItemIds, soldItemIds, isLoading: false })
+    this.setState({ items, isLoading: false })
 
     if (items && items.length < 1) this.setState({ showErrorMessage: true })
     await new Promise(resolve => setTimeout(resolve, 1500))
     this.setState({ showErrorMessage: false })
   }
 
-  isItemProcessed = (id: string): boolean => {
-    return this.state.processedItemIds?.includes(id) || false
-  }
-
-  isItemSold = (id: string): boolean => {
-    return this.state.soldItemIds?.includes(id) || false
-  }
-
   toggleItemIsProcessedCheckedById = async (id: string) => {
-    let processedItemIds = [...this.state.processedItemIds]
-    if (processedItemIds.includes(id)) {
-      const index = processedItemIds.findIndex(i => i === id)
-      processedItemIds.splice(index, 1)
-    } else {
-      processedItemIds.push(id)
-    }
-
-    this.setState({ processedItemIds })
     await new Promise(resolve => setTimeout(resolve, 200))
     history.push(`/inventory/edit/${id}`)
   }
 
   toggleItemIsSoldCheckedById = async (id: string) => {
-    let soldItemIds = [...this.state.soldItemIds]
-    if (soldItemIds.includes(id)) {
-      const index = soldItemIds.findIndex(i => i === id)
-      soldItemIds.splice(index, 1)
-    } else {
-      soldItemIds.push(id)
-    }
-
-    this.setState({ soldItemIds })
     await new Promise(resolve => setTimeout(resolve, 200))
     history.push(`/inventory/sell/${id}`)
   }
@@ -98,10 +66,7 @@ class InventoryView extends React.Component<InventoryViewProps, InventoryViewSta
     this.setState({ isLoading: true, showQueryBuilder: false })
 
     const items = await this.controller.getItemsByQuery(query)
-    
-    const processedItemIds = items?.filter(i => i.isProcessed).map(i => i.id) || []
-    const soldItemIds = items?.filter(i => i.isSold).map(i => i.id) || []
-    this.setState({ items, processedItemIds, soldItemIds, isLoading: false })
+    this.setState({ items, isLoading: false })
 
     if (items && items.length < 1) this.setState({ showErrorMessage: true })
     await new Promise(resolve => setTimeout(resolve, 1500))
@@ -109,18 +74,9 @@ class InventoryView extends React.Component<InventoryViewProps, InventoryViewSta
   }
 
   renderSwitch = (item: IItem) => {
-    if (!item.isProcessed) return <FormControlLabel
-      value="top"
-      control={<Switch color="primary" edge='end' checked={this.isItemProcessed(item.id)} onChange={() => { this.toggleItemIsProcessedCheckedById(item.id) }} />}
-      label="Proccessed"
-      labelPlacement="top"
-    />
-    else return <FormControlLabel
-      value="top"
-      control={<Switch color="secondary" edge='end' checked={this.isItemSold(item.id)} disabled={item.isSold} onChange={() => { this.toggleItemIsSoldCheckedById(item.id) }} />}
-      label="Sold"
-      labelPlacement="top"
-    />
+    if (!item.isProcessed) return <Button variant='contained' color='primary' onClick={() => { this.toggleItemIsProcessedCheckedById(item.id) }}>Process</Button>
+    else if (item.isProcessed && !item.isSold) return <Button variant='contained' color='secondary' onClick={() => { this.toggleItemIsSoldCheckedById(item.id) }}>Sell</Button>
+    else return <Button disabled>Sold</Button>
   }
 
   renderItems = () => {
