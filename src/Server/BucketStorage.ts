@@ -7,13 +7,11 @@ class BucketStorage {
     endpoint: SYS.objectStorageEndpoint,
     accessKeyId: SYS.objectStorageAccessId,
     secretAccessKey: SYS.objectStorageSecretAccessKey,
-    region: 'default',
-    httpOptions: {
-      timeout: 0
-    }
+    s3ForcePathStyle: true, // needed with minio?
+    signatureVersion: 'v4'
   })
 
-  public static async upload (props: { bucketName: string, file: Buffer, fileName: string }): Promise<string> {
+  public static async upload(props: { bucketName: string, file: Buffer, fileName: string }): Promise<string> {
     try {
       const fileUploadResponse: aws.S3.ManagedUpload.SendData = await this.s3.upload({
         Bucket: props.bucketName,
@@ -27,7 +25,7 @@ class BucketStorage {
     }
   }
 
-  public static getPresignedUrl (props: { bucketName: string, key: string, expiresInSeconds: number }) {
+  public static getDownloadPresignedUrl(props: { bucketName: string, key: string, expiresInSeconds: number }) {
     const expriesInMiliseconds = (props.expiresInSeconds * 1000) || 60000
     const presignedUrlResponse = this.s3.getSignedUrl('getObject', {
       Bucket: props.bucketName,
@@ -37,7 +35,19 @@ class BucketStorage {
     return presignedUrlResponse
   }
 
-  public static createBucketKey (props: { entityId: string, prefix: BucketKeyPrefixes, extention: string }) {
+  public static getUploadPresignedUrl(props: { bucketName: string, key: string, expiresInSeconds: number, contentType: string }) {
+    const expriesInMiliseconds = (props.expiresInSeconds * 1000) || 10000
+    const presignedUrlResponse = this.s3.getSignedUrl('putObject', {
+      Bucket: props.bucketName,
+      Key: props.key,
+      Expires: expriesInMiliseconds,
+      ContentType: props.contentType,
+      ACL: 'private'
+    })
+    return presignedUrlResponse
+  }
+
+  public static createBucketKey(props: { entityId: string, prefix: BucketKeyPrefixes, extention: string }) {
     return `${props.prefix}-${props.entityId}.${props.extention}`
   }
 }
